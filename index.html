@@ -106,7 +106,7 @@
             <div id="setup-screen">
                 <h1 class="text-xl font-extrabold mb-6 tracking-tight">Memory Challenge</h1>
                 
-                <p class="text-xs text-slate-400 uppercase font-bold mb-3 text-left pl-1">Digits</p>
+                <p class="text-xs text-slate-400 uppercase font-bold mb-3 text-left pl-1">Unique Digits</p>
                 <div class="option-grid mb-5">
                     <button onclick="setDigits(6)" id="d6" class="btn-select active">6</button>
                     <button onclick="setDigits(7)" id="d7" class="btn-select">7</button>
@@ -130,7 +130,7 @@
                 <div class="timer-track">
                     <div id="progress" class="timer-fill"></div>
                 </div>
-                <p class="text-xs text-indigo-400 font-bold uppercase">Remember</p>
+                <p class="text-xs text-indigo-400 font-bold uppercase">Remember (Unique)</p>
                 <div id="number-display" class="digit-hero">000000</div>
                 <p class="text-xs text-slate-500"><span id="timer-text">10</span>s left</p>
             </div>
@@ -174,9 +174,18 @@
             document.getElementById('t' + s).classList.add('active');
         }
 
+        function generateUniqueSequence(len) {
+            const pool = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+            let result = "";
+            for (let i = 0; i < len; i++) {
+                const randomIndex = Math.floor(Math.random() * pool.length);
+                result += pool.splice(randomIndex, 1)[0];
+            }
+            return result;
+        }
+
         function startGame() {
-            currentNumber = "";
-            for(let i=0; i<config.digits; i++) currentNumber += Math.floor(Math.random()*10);
+            currentNumber = generateUniqueSequence(config.digits);
             
             document.getElementById('number-display').innerText = currentNumber;
             show('memorize-screen');
