@@ -12,20 +12,20 @@
             font-family: 'Outfit', sans-serif;
             background-color: #0f172a;
             color: #f8fafc;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start; /* Aligns content to top */
-            min-height: 100vh;
             margin: 0;
             overflow-x: hidden;
-            padding-top: 2rem; /* Initial breathing room from top */
+            /* Remove flex-centering to ensure top alignment */
+            display: block; 
         }
 
         .app-container {
             width: 100%;
             max-width: 360px;
+            margin: 0 auto;
             padding: 1rem;
+            /* Ensure it stays at the top */
+            position: relative;
+            top: 0;
         }
 
         .glass-card {
@@ -50,6 +50,7 @@
             border-radius: 1rem;
             font-weight: 600;
             transition: all 0.2s;
+            outline: none;
         }
 
         .btn-select.active {
@@ -72,6 +73,7 @@
             background: rgba(255, 255, 255, 0.1);
             border-radius: 2px;
             margin-bottom: 1.5rem;
+            overflow: hidden;
         }
 
         .timer-fill {
@@ -79,6 +81,11 @@
             background: #6366f1;
             width: 100%;
             border-radius: 2px;
+        }
+
+        /* Prevent zooming on focus in iOS */
+        input[type="number"] {
+            font-size: 24px !important; 
         }
 
         input::-webkit-outer-spin-button,
@@ -91,14 +98,14 @@
 <body>
 
     <div class="app-container">
-        <!-- Compact Score -->
-        <div class="flex justify-between px-4 mb-4 text-xs font-bold uppercase tracking-widest text-slate-400">
+        <!-- Scoreboard - Highest element -->
+        <div class="flex justify-between px-4 mb-3 text-[10px] font-bold uppercase tracking-widest text-slate-400">
             <div class="flex items-center gap-2">
-                <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
                 Correct: <span id="score-correct" class="text-white ml-1">0</span>
             </div>
             <div class="flex items-center gap-2">
-                <span class="w-2 h-2 rounded-full bg-rose-500"></span>
+                <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
                 Wrong: <span id="score-wrong" class="text-white ml-1">0</span>
             </div>
         </div>
@@ -106,24 +113,24 @@
         <div class="glass-card">
             <!-- Setup Screen -->
             <div id="setup-screen">
-                <h1 class="text-xl font-extrabold mb-6 tracking-tight">Memory Challenge</h1>
+                <h1 class="text-lg font-extrabold mb-4 tracking-tight">Digit Dash</h1>
                 
-                <p class="text-xs text-slate-400 uppercase font-bold mb-3 text-left pl-1">Unique Digits</p>
-                <div class="option-grid mb-5">
+                <p class="text-[10px] text-slate-400 uppercase font-black mb-2 text-left pl-1">Length</p>
+                <div class="option-grid mb-4">
                     <button onclick="setDigits(6)" id="d6" class="btn-select active">6</button>
                     <button onclick="setDigits(7)" id="d7" class="btn-select">7</button>
                     <button onclick="setDigits(8)" id="d8" class="btn-select">8</button>
                 </div>
 
-                <p class="text-xs text-slate-400 uppercase font-bold mb-3 text-left pl-1">Seconds</p>
-                <div class="option-grid mb-8">
+                <p class="text-[10px] text-slate-400 uppercase font-black mb-2 text-left pl-1">Duration</p>
+                <div class="option-grid mb-6">
                     <button onclick="setTime(10)" id="t10" class="btn-select active">10s</button>
                     <button onclick="setTime(15)" id="t15" class="btn-select">15s</button>
                     <button onclick="setTime(20)" id="t20" class="btn-select">20s</button>
                 </div>
 
-                <button onclick="startGame()" class="w-full bg-indigo-600 py-4 rounded-xl font-bold text-white shadow-lg active:scale-95 transition-transform">
-                    START
+                <button onclick="startGame()" class="w-full bg-indigo-600 py-3.5 rounded-xl font-bold text-white shadow-lg active:scale-95 transition-transform">
+                    START CHALLENGE
                 </button>
             </div>
 
@@ -132,17 +139,17 @@
                 <div class="timer-track">
                     <div id="progress" class="timer-fill"></div>
                 </div>
-                <p class="text-xs text-indigo-400 font-bold uppercase">Remember (Unique)</p>
+                <p class="text-[10px] text-indigo-400 font-black uppercase tracking-widest">Memorize This</p>
                 <div id="number-display" class="digit-hero">000000</div>
-                <p class="text-xs text-slate-500"><span id="timer-text">10</span>s left</p>
+                <p class="text-xs text-slate-500 font-medium"><span id="timer-text">10</span>s remaining</p>
             </div>
 
             <!-- Input Screen -->
             <div id="input-screen" class="hidden">
-                <p class="text-sm font-semibold mb-4 text-slate-300">What was the number?</p>
+                <p class="text-sm font-semibold mb-4 text-slate-300">Enter the sequence</p>
                 <input type="number" pattern="\d*" inputmode="numeric" id="user-input" 
-                    class="w-full text-center text-3xl font-bold py-3 bg-slate-800/50 border border-slate-700 rounded-xl focus:border-indigo-500 focus:outline-none mb-4 text-white">
-                <button onclick="checkAnswer()" class="w-full bg-indigo-600 py-4 rounded-xl font-bold text-white shadow-lg">
+                    class="w-full text-center font-bold py-3 bg-slate-800/50 border border-slate-700 rounded-xl focus:border-indigo-500 focus:outline-none mb-4 text-white">
+                <button onclick="checkAnswer()" class="w-full bg-indigo-600 py-3.5 rounded-xl font-bold text-white shadow-lg">
                     SUBMIT
                 </button>
             </div>
@@ -150,9 +157,9 @@
             <!-- Result Screen -->
             <div id="result-screen" class="hidden">
                 <div id="result-status" class="text-sm font-bold uppercase mb-2"></div>
-                <div id="result-msg" class="text-xs text-slate-400 mb-6 px-4"></div>
-                <button onclick="resetGame()" class="w-full bg-slate-700 py-4 rounded-xl font-bold text-white">
-                    NEXT ROUND
+                <div id="result-msg" class="text-xs text-slate-400 mb-6 leading-relaxed"></div>
+                <button onclick="resetGame()" class="w-full bg-slate-700 py-3.5 rounded-xl font-bold text-white">
+                    PLAY AGAIN
                 </button>
             </div>
         </div>
@@ -188,7 +195,6 @@
 
         function startGame() {
             currentNumber = generateUniqueSequence(config.digits);
-            
             document.getElementById('number-display').innerText = currentNumber;
             show('memorize-screen');
             
@@ -212,7 +218,7 @@
             show('input-screen');
             const inp = document.getElementById('user-input');
             inp.value = "";
-            setTimeout(() => inp.focus(), 100);
+            setTimeout(() => inp.focus(), 150);
             inp.onkeyup = (e) => { if(e.key === 'Enter') checkAnswer(); };
         }
 
@@ -225,14 +231,14 @@
             
             if(val === currentNumber) {
                 stats.correct++;
-                status.innerText = "Correct!";
+                status.innerText = "✓ Perfect";
                 status.className = "text-emerald-400 text-sm font-bold uppercase mb-2";
-                msg.innerHTML = `You matched <span class="text-white font-bold">${currentNumber}</span>`;
+                msg.innerHTML = `You correctly remembered <span class="text-white font-bold tracking-widest">${currentNumber}</span>`;
             } else {
                 stats.wrong++;
-                status.innerText = "Incorrect";
+                status.innerText = "✕ Incorrect";
                 status.className = "text-rose-400 text-sm font-bold uppercase mb-2";
-                msg.innerHTML = `Target: <span class="text-white font-bold">${currentNumber}</span><br>Entry: <span class="text-rose-300">${val || 'empty'}</span>`;
+                msg.innerHTML = `Target was <span class="text-white font-bold tracking-widest">${currentNumber}</span><br>You entered <span class="text-rose-300 font-bold">${val || 'nothing'}</span>`;
             }
             
             document.getElementById('score-correct').innerText = stats.correct;
