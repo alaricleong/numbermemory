@@ -14,7 +14,6 @@
             color: #f8fafc;
             margin: 0;
             overflow-x: hidden;
-            /* Remove flex-centering to ensure top alignment */
             display: block; 
         }
 
@@ -23,7 +22,6 @@
             max-width: 360px;
             margin: 0 auto;
             padding: 1rem;
-            /* Ensure it stays at the top */
             position: relative;
             top: 0;
         }
@@ -83,7 +81,6 @@
             border-radius: 2px;
         }
 
-        /* Prevent zooming on focus in iOS */
         input[type="number"] {
             font-size: 24px !important; 
         }
@@ -93,20 +90,39 @@
             -webkit-appearance: none;
             margin: 0;
         }
+
+        .copy-toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #10b981;
+            padding: 0.75rem 1.5rem;
+            border-radius: 1rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            z-index: 50;
+        }
     </style>
 </head>
 <body>
 
     <div class="app-container">
-        <!-- Scoreboard - Highest element -->
+        <!-- Progress & Scoreboard -->
         <div class="flex justify-between px-4 mb-3 text-[10px] font-bold uppercase tracking-widest text-slate-400">
-            <div class="flex items-center gap-2">
-                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                Correct: <span id="score-correct" class="text-white ml-1">0</span>
-            </div>
-            <div class="flex items-center gap-2">
-                <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
-                Wrong: <span id="score-wrong" class="text-white ml-1">0</span>
+            <div id="round-indicator">Round 1/6</div>
+            <div class="flex items-center gap-3">
+                <div class="flex items-center gap-1">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                    <span id="score-correct" class="text-white">0</span>
+                </div>
+                <div class="flex items-center gap-1">
+                    <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
+                    <span id="score-wrong" class="text-white">0</span>
+                </div>
             </div>
         </div>
 
@@ -114,6 +130,7 @@
             <!-- Setup Screen -->
             <div id="setup-screen">
                 <h1 class="text-lg font-extrabold mb-4 tracking-tight">Digit Dash</h1>
+                <p class="text-xs text-slate-400 mb-6">Complete 6 rounds to see your score</p>
                 
                 <p class="text-[10px] text-slate-400 uppercase font-black mb-2 text-left pl-1">Length</p>
                 <div class="option-grid mb-4">
@@ -129,7 +146,7 @@
                     <button onclick="setTime(20)" id="t20" class="btn-select">20s</button>
                 </div>
 
-                <button onclick="startGame()" class="w-full bg-indigo-600 py-3.5 rounded-xl font-bold text-white shadow-lg active:scale-95 transition-transform">
+                <button onclick="startChallenge()" class="w-full bg-indigo-600 py-3.5 rounded-xl font-bold text-white shadow-lg active:scale-95 transition-transform">
                     START CHALLENGE
                 </button>
             </div>
@@ -158,16 +175,50 @@
             <div id="result-screen" class="hidden">
                 <div id="result-status" class="text-sm font-bold uppercase mb-2"></div>
                 <div id="result-msg" class="text-xs text-slate-400 mb-6 leading-relaxed"></div>
-                <button onclick="resetGame()" class="w-full bg-slate-700 py-3.5 rounded-xl font-bold text-white">
-                    PLAY AGAIN
+                <button id="next-btn" onclick="nextRound()" class="w-full bg-slate-700 py-3.5 rounded-xl font-bold text-white">
+                    NEXT ROUND
                 </button>
+            </div>
+
+            <!-- Summary Screen -->
+            <div id="summary-screen" class="hidden">
+                <div class="text-indigo-400 text-3xl mb-2">🏆</div>
+                <h2 class="text-xl font-extrabold mb-1">Challenge Complete</h2>
+                <p id="summary-date" class="text-[10px] text-slate-500 uppercase font-bold mb-6"></p>
+                
+                <div class="grid grid-cols-2 gap-4 mb-8">
+                    <div class="bg-slate-800/50 p-4 rounded-2xl border border-slate-700">
+                        <div class="text-2xl font-bold text-emerald-400" id="final-correct">0</div>
+                        <div class="text-[10px] text-slate-400 uppercase font-bold">Correct</div>
+                    </div>
+                    <div class="bg-slate-800/50 p-4 rounded-2xl border border-slate-700">
+                        <div class="text-2xl font-bold text-rose-400" id="final-wrong">0</div>
+                        <div class="text-[10px] text-slate-400 uppercase font-bold">Wrong</div>
+                    </div>
+                </div>
+
+                <div class="flex flex-col gap-2">
+                    <button onclick="shareWhatsApp()" class="w-full bg-[#25D366] py-3.5 rounded-xl font-bold text-white shadow-lg active:scale-95 transition-transform flex items-center justify-center gap-2">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12.031 6.172c-2.32 0-4.525.903-6.163 2.541-1.638 1.638-2.541 3.842-2.541 6.162 0 2.123.759 4.137 2.135 5.717l-1.396 5.097 5.223-1.371c1.503.82 3.197 1.254 4.919 1.254h.004c2.32 0 4.525-.903 6.163-2.541 1.638-1.638 2.541-3.842 2.541-6.162 0-2.32-.903-4.525-2.541-6.162-1.638-1.638-3.842-2.541-6.163-2.541zm5.286 11.75c-.218.614-1.282 1.154-1.782 1.22-.499.066-1.022.094-3.134-.78-2.697-1.118-4.444-3.86-4.579-4.039-.134-.179-1.096-1.455-1.096-2.777 0-1.322.692-1.97.942-2.233.25-.262.541-.328.72-.328.179 0 .359.001.517.009.166.008.388-.063.606.463.218.525.748 1.822.813 1.954.066.131.11.284.022.46-.088.176-.131.306-.262.46l-.394.46c-.131.153-.268.32-.116.58.152.26.677 1.114 1.45 1.804.994.888 1.832 1.163 2.094 1.293.262.131.415.109.57-.066.154-.175.66-.766.837-1.028.177-.262.354-.219.597-.131.243.087 1.547.731 1.812.863.266.131.442.197.508.306.066.11.066.634-.153 1.248z"/></svg>
+                        WHATSAPP
+                    </button>
+                    <button onclick="copyResults()" class="w-full bg-slate-700/50 border border-slate-600 py-3.5 rounded-xl font-bold text-white flex items-center justify-center gap-2">
+                        COPY TEXT
+                    </button>
+                    <button onclick="resetToHome()" class="w-full bg-slate-800 py-3.5 rounded-xl font-bold text-slate-400 mt-2">
+                        NEW GAME
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 
+    <div id="toast" class="copy-toast">Copied to clipboard!</div>
+
     <script>
         let config = { digits: 6, time: 10 };
-        let stats = { correct: 0, wrong: 0 };
+        let stats = { correct: 0, wrong: 0, currentRound: 0 };
+        const TOTAL_ROUNDS = 6;
         let currentNumber = "";
         let timer;
 
@@ -183,6 +234,20 @@
             document.getElementById('t' + s).classList.add('active');
         }
 
+        function startChallenge() {
+            stats.correct = 0;
+            stats.wrong = 0;
+            stats.currentRound = 0;
+            updateUI();
+            nextRound();
+        }
+
+        function updateUI() {
+            document.getElementById('score-correct').innerText = stats.correct;
+            document.getElementById('score-wrong').innerText = stats.wrong;
+            document.getElementById('round-indicator').innerText = `Round ${Math.min(stats.currentRound + 1, TOTAL_ROUNDS)}/${TOTAL_ROUNDS}`;
+        }
+
         function generateUniqueSequence(len) {
             const pool = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
             let result = "";
@@ -193,7 +258,13 @@
             return result;
         }
 
-        function startGame() {
+        function nextRound() {
+            stats.currentRound++;
+            if (stats.currentRound > TOTAL_ROUNDS) {
+                showSummary();
+                return;
+            }
+            updateUI();
             currentNumber = generateUniqueSequence(config.digits);
             document.getElementById('number-display').innerText = currentNumber;
             show('memorize-screen');
@@ -226,6 +297,7 @@
             const val = document.getElementById('user-input').value;
             const status = document.getElementById('result-status');
             const msg = document.getElementById('result-msg');
+            const nextBtn = document.getElementById('next-btn');
             
             show('result-screen');
             
@@ -233,27 +305,75 @@
                 stats.correct++;
                 status.innerText = "✓ Perfect";
                 status.className = "text-emerald-400 text-sm font-bold uppercase mb-2";
-                msg.innerHTML = `You correctly remembered <span class="text-white font-bold tracking-widest">${currentNumber}</span>`;
+                msg.innerHTML = `You matched <span class="text-white font-bold tracking-widest">${currentNumber}</span>`;
             } else {
                 stats.wrong++;
                 status.innerText = "✕ Incorrect";
                 status.className = "text-rose-400 text-sm font-bold uppercase mb-2";
                 msg.innerHTML = `Target was <span class="text-white font-bold tracking-widest">${currentNumber}</span><br>You entered <span class="text-rose-300 font-bold">${val || 'nothing'}</span>`;
             }
+
+            if (stats.currentRound >= TOTAL_ROUNDS) {
+                nextBtn.innerText = "VIEW SUMMARY";
+                nextBtn.className = "w-full bg-indigo-600 py-3.5 rounded-xl font-bold text-white shadow-lg";
+            } else {
+                nextBtn.innerText = "NEXT ROUND";
+                nextBtn.className = "w-full bg-slate-700 py-3.5 rounded-xl font-bold text-white";
+            }
             
-            document.getElementById('score-correct').innerText = stats.correct;
-            document.getElementById('score-wrong').innerText = stats.wrong;
+            updateUI();
+        }
+
+        function showSummary() {
+            show('summary-screen');
+            document.getElementById('final-correct').innerText = stats.correct;
+            document.getElementById('final-wrong').innerText = stats.wrong;
+            const now = new Date();
+            document.getElementById('summary-date').innerText = now.toLocaleDateString(undefined, { 
+                year: 'numeric', month: 'short', day: 'numeric' 
+            });
+        }
+
+        function getShareText() {
+            const date = new Date().toLocaleDateString();
+            return `Digit Dash Challenge 🏆\nDate: ${date}\nDigits: ${config.digits}\nTime: ${config.time}s\nScore: ${stats.correct} Correct, ${stats.wrong} Wrong\nCan you beat me?`;
+        }
+
+        function shareWhatsApp() {
+            const text = encodeURIComponent(getShareText());
+            window.open(`whatsapp://send?text=${text}`, '_blank');
+        }
+
+        function copyResults() {
+            const text = getShareText();
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                const toast = document.getElementById('toast');
+                toast.style.opacity = "1";
+                setTimeout(() => toast.style.opacity = "0", 2000);
+            } catch (err) {
+                console.error('Failed to copy', err);
+            }
+            document.body.removeChild(textArea);
+        }
+
+        function resetToHome() {
+            stats.correct = 0;
+            stats.wrong = 0;
+            stats.currentRound = 0;
+            updateUI();
+            show('setup-screen');
         }
 
         function show(id) {
-            ['setup-screen', 'memorize-screen', 'input-screen', 'result-screen'].forEach(s => {
+            ['setup-screen', 'memorize-screen', 'input-screen', 'result-screen', 'summary-screen'].forEach(s => {
                 document.getElementById(s).classList.add('hidden');
             });
             document.getElementById(id).classList.remove('hidden');
-        }
-
-        function resetGame() {
-            show('setup-screen');
         }
     </script>
 </body>
