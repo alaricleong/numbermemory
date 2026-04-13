@@ -37,7 +37,6 @@
 
         .option-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
             gap: 0.5rem;
         }
 
@@ -133,14 +132,15 @@
                 <p class="text-xs text-slate-400 mb-6">Complete 6 rounds to see your score</p>
                 
                 <p class="text-[10px] text-slate-400 uppercase font-black mb-2 text-left pl-1">Length</p>
-                <div class="option-grid mb-4">
+                <div class="option-grid grid-cols-4 mb-4">
                     <button onclick="setDigits(6)" id="d6" class="btn-select active">6</button>
                     <button onclick="setDigits(7)" id="d7" class="btn-select">7</button>
                     <button onclick="setDigits(8)" id="d8" class="btn-select">8</button>
+                    <button onclick="setDigits(9)" id="d9" class="btn-select">9</button>
                 </div>
 
                 <p class="text-[10px] text-slate-400 uppercase font-black mb-2 text-left pl-1">Duration</p>
-                <div class="option-grid mb-6">
+                <div class="option-grid grid-cols-3 mb-6">
                     <button onclick="setTime(10)" id="t10" class="btn-select active">10s</button>
                     <button onclick="setTime(15)" id="t15" class="btn-select">15s</button>
                     <button onclick="setTime(20)" id="t20" class="btn-select">20s</button>
@@ -224,7 +224,10 @@
 
         function setDigits(n) {
             config.digits = n;
-            ['d6', 'd7', 'd8'].forEach(id => document.getElementById(id).classList.remove('active'));
+            ['d6', 'd7', 'd8', 'd9'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.classList.remove('active');
+            });
             document.getElementById('d' + n).classList.add('active');
         }
 
