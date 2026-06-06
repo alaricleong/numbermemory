@@ -1,442 +1,690 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Icon Match</title>
-    <!-- Loading Tailwind CSS -->
+    <title>Digit Dash - Memory Challenge</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        // Configure Tailwind to support class-based dark mode
         tailwind.config = {
             darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                    }
+                }
+            }
         }
     </script>
-    
     <style>
-        /* Aptos/Modern Sans-Serif Stack with premium UI optimizations */
-        body {
-            font-family: 'Aptos', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            transition: background-color 0.4s ease, color 0.4s ease;
-        }
-
-        /* 3D Card Flip Mechanics */
-        .card {
-            perspective: 1000px;
-            aspect-ratio: 1 / 1;
-            width: 100%;
-        }
-
-        .card-inner {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            text-align: center;
-            transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
-            transform-style: preserve-3d;
-            cursor: pointer;
-        }
-
-        .card.flipped .card-inner {
-            transform: rotateY(180deg);
-        }
-
-        .card-front, .card-back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08);
-            user-select: none;
-            transition: border-color 0.2s, box-shadow 0.2s, background-color 0.3s;
-        }
-
-        /* Front face of card (Hidden State) */
-        .card-front {
-            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-            border: 2px solid #cbd5e1;
-            color: #64748b;
-            font-size: var(--mystery-size, 1.5rem);
-            font-weight: 800;
-        }
-
-        .dark .card-front {
-            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-            border-color: #475569;
-            color: #94a3b8;
-        }
-
-        .card:hover .card-front {
-            border-color: #3b82f6;
-            box-shadow: 0 8px 12px -3px rgba(59, 130, 246, 0.15);
-        }
-
-        /* Revealed back face of card */
-        .card-back {
-            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-            transform: rotateY(180deg);
-            /* Maximum visual scale for icons while maintaining internal padding */
-            font-size: var(--icon-size, 2.5rem);
-            line-height: 1;
-            padding: 4px;
-        }
-
-        /* Matched State styling with pulse animation */
-        .card.matched .card-back {
-            background: linear-gradient(135deg, #10b981 0%, #047857 100%);
-            box-shadow: 0 0 12px rgba(16, 185, 129, 0.4);
-            animation: match-pulse 0.4s ease-out;
-        }
-
-        @keyframes match-pulse {
-            0% { transform: rotateY(180deg) scale(1); }
-            50% { transform: rotateY(180deg) scale(1.1); }
-            100% { transform: rotateY(180deg) scale(1); }
-        }
-
-        #game-grid {
-            display: grid;
-            gap: 6px;
-            width: 100%;
-            max-width: 380px;
-            margin: 0 auto;
-        }
-
-        /* Tactile Active States and Controls */
-        .btn-toggle {
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
         
-        .btn-toggle:active {
-            transform: scale(0.95);
+        body {
+            transition: background-color 0.4s ease, color 0.4s ease;
+            -webkit-user-select: none;
+            user-select: none;
         }
 
-        .difficulty-active, .timer-active {
-            background-color: #2563eb !important;
+        /* Default Dark Mode background */
+        html.dark body {
+            background-color: #0b0f19;
+            color: #f1f5f9;
+        }
+
+        /* High-contrast Light Mode overrides */
+        html.light body {
+            background-color: #f1f5f9;
+            color: #0f172a;
+        }
+
+        .glass-card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.45);
+            transition: background-color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        html.light .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(15, 23, 42, 0.12);
+            box-shadow: 0 20px 40px -15px rgba(15, 23, 42, 0.1);
+        }
+
+        /* Maximized, chunky touch button targets that fill mobile screens generously */
+        .btn-select {
+            background: rgba(255, 255, 255, 0.04);
+            border: 2px solid rgba(255, 255, 255, 0.08);
+            color: #e2e8f0;
+            transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+            -webkit-tap-highlight-color: transparent;
+            cursor: pointer;
+            min-height: 64px;
+            font-size: 1.125rem;
+        }
+
+        html.light .btn-select {
+            background: rgba(15, 23, 42, 0.05);
+            border: 2px solid rgba(15, 23, 42, 0.15);
+            color: #1e293b;
+        }
+
+        /* Enhanced tactile hover/active states for light and dark modes */
+        .btn-select:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-1px);
+        }
+
+        html.light .btn-select:hover:not(.active) {
+            background: rgba(15, 23, 42, 0.08);
+            border-color: rgba(15, 23, 42, 0.3);
+        }
+
+        .btn-select.active {
+            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+            border-color: #818cf8;
+            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.45), inset 0 2px 4px rgba(255, 255, 255, 0.2);
             color: #ffffff !important;
-            border-color: #2563eb !important;
-            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.3);
+            transform: scale(1.03);
         }
 
-        #preview-bar {
-            height: 4px;
-            background: linear-gradient(90deg, #3b82f6, #60a5fa);
-            width: 0%;
-            transition: width linear;
+        html.light .btn-select.active {
+            background: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%);
+            border-color: #4f46e5;
+            box-shadow: 0 6px 18px rgba(79, 70, 229, 0.35);
+        }
+
+        .btn-select:active {
+            transform: scale(0.95);
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        html.light .btn-select:active {
+            background: rgba(15, 23, 42, 0.12);
+        }
+
+        .btn-select.active:active {
+            transform: scale(0.97);
+            background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
+        }
+
+        /* Big-touch generic CTA animation */
+        .btn-tap-effect {
+            transition: transform 0.1s ease, filter 0.1s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .btn-tap-effect:active {
+            transform: scale(0.96);
+            filter: brightness(0.95);
+        }
+
+        .digit-hero {
+            font-size: 3.25rem;
+            font-weight: 800;
+            letter-spacing: 0.25rem;
+            font-variant-numeric: tabular-nums;
+            background: linear-gradient(135deg, #a5b4fc 0%, #6366f1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 4px 16px rgba(99, 102, 241, 0.25);
+        }
+
+        html.light .digit-hero {
+            background: linear-gradient(135deg, #4f46e5 0%, #312e81 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Entry animations */
+        .fade-in {
+            animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        input[type="number"] {
+            font-size: 28px !important;
+        }
+
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .copy-toast {
+            position: fixed;
+            bottom: 2.5rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(10px);
+            background: #10b981;
+            padding: 1rem 2rem;
+            border-radius: 1.25rem;
+            font-size: 0.95rem;
+            font-weight: 700;
+            opacity: 0;
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.4);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        .copy-toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* High-contrast colors for utility text inside light mode */
+        html.light .text-slate-400 {
+            color: #475569 !important;
+        }
+        html.light .text-slate-300 {
+            color: #1e293b !important;
+        }
+        html.light .text-slate-500 {
+            color: #334155 !important;
+        }
+        html.light .bg-slate-800\/60 {
+            background-color: #e2e8f0 !important;
         }
     </style>
 </head>
-<body class="bg-slate-100 text-slate-800 dark:bg-slate-900 dark:text-slate-100 p-3 flex flex-col items-center justify-start select-none min-h-screen">
+<body class="min-h-screen flex flex-col items-center justify-start overflow-y-auto pb-12">
 
-    <div class="w-full max-w-sm text-center mb-2">
-        <div class="flex items-center justify-between mb-2">
-            <div class="flex items-center gap-2">
-                <span class="text-2xl">🧠</span>
-                <h1 class="text-2xl font-black tracking-tight text-slate-800 dark:text-slate-50">Icon Match</h1>
-            </div>
-            
-            <!-- Dark Mode Toggle Button -->
-            <button onclick="toggleDarkMode()" id="theme-toggle" class="btn-toggle p-2 rounded-lg bg-white/80 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 shadow-sm text-lg">
-                🌙
-            </button>
-        </div>
+    <!-- Top Navigation Utilities bar -->
+    <div class="w-full max-w-[390px] px-5 pt-4 flex justify-between items-center z-50">
+        <span class="text-[11px] font-black tracking-widest text-indigo-500 dark:text-indigo-400 uppercase">Dash v2.3</span>
         
-        <!-- Difficulty selection -->
-        <div class="flex justify-center gap-1.5 mb-2.5">
-            <button onclick="setDifficulty('easy')" id="btn-easy" class="btn-toggle px-3.5 py-1 text-xs rounded-full border border-slate-300 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-bold bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm">Easy</button>
-            <button onclick="setDifficulty('medium')" id="btn-medium" class="btn-toggle px-3.5 py-1 text-xs rounded-full border border-slate-300 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-bold bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm">Medium</button>
-            <button onclick="setDifficulty('hard')" id="btn-hard" class="btn-toggle px-3.5 py-1 text-xs rounded-full border border-slate-300 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-bold bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm">Hard</button>
-        </div>
-
-        <!-- Starting View Timer -->
-        <div class="mb-3 bg-white/60 dark:bg-slate-800/60 p-2 rounded-xl border border-slate-200/50 dark:border-slate-700/50 shadow-sm">
-            <p class="text-[9px] uppercase tracking-wider text-slate-500 dark:text-slate-400 font-black mb-1.5">Starting View Time</p>
-            <div class="flex justify-center gap-1.5">
-                <button onclick="setPreviewTime(2)" id="time-2" class="btn-toggle px-4 py-1 text-xs font-bold rounded-lg border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 shadow-sm">2s</button>
-                <button onclick="setPreviewTime(5)" id="time-5" class="btn-toggle px-4 py-1 text-xs font-bold rounded-lg border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 shadow-sm">5s</button>
-                <button onclick="setPreviewTime(10)" id="time-10" class="btn-toggle px-4 py-1 text-xs font-bold rounded-lg border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 shadow-sm">10s</button>
-            </div>
-        </div>
-
-        <!-- Dynamic stats counters -->
-        <div class="flex justify-between items-center text-slate-700 dark:text-slate-300 text-xs px-2 mb-1.5 font-semibold">
-            <div class="bg-white/80 dark:bg-slate-800/80 px-3 py-1 rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm">
-                Moves: <span id="move-count" class="font-bold text-blue-600 dark:text-blue-400">0</span>
-            </div>
-            <div class="bg-white/80 dark:bg-slate-800/80 px-3 py-1 rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm">
-                Matched: <span id="match-count" class="font-bold text-emerald-600 dark:text-emerald-400">0</span> / <span id="total-pairs" class="text-slate-500">0</span>
-            </div>
-        </div>
-
-        <!-- Countdown bar container -->
-        <div class="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-1 mb-1 overflow-hidden shadow-inner">
-            <div id="preview-bar"></div>
-        </div>
-    </div>
-
-    <!-- The Game Matrix -->
-    <div id="game-grid"></div>
-
-    <!-- Main action panels -->
-    <div class="w-full max-w-[380px] flex gap-3 mt-4">
-        <button onclick="showHint()" id="hint-btn" class="flex-1 py-3 bg-amber-500 text-white font-extrabold text-sm rounded-xl hover:bg-amber-600 active:scale-95 transition-all shadow-md shadow-amber-500/20 disabled:opacity-30 disabled:pointer-events-none">
-            ⚡ Show Hint
-        </button>
-        <button onclick="triggerGiveUpConfirm()" id="giveup-btn" class="flex-1 py-3 bg-slate-700 text-slate-100 font-extrabold text-sm rounded-xl hover:bg-slate-800 active:scale-95 transition-all shadow-md shadow-slate-700/20 dark:bg-slate-800 dark:hover:bg-slate-700">
-            🏳️ Give Up
+        <button onclick="toggleTheme()" class="btn-tap-effect p-3.5 rounded-full bg-slate-800/60 dark:bg-slate-800/40 border border-slate-700/50 light:border-slate-300/50 hover:scale-105 transition-all outline-none" aria-label="Toggle theme">
+            <!-- Sun Icon -->
+            <svg id="theme-sun" class="w-4.5 h-4.5 text-amber-400 block dark:block" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 17.95a1 1 0 01-1.414-1.414l.707-.707a1 1 0 111.414 1.414l-.707.707zm1.414-10.607a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 1.414l-.707.707zM3 11a1 1 0 100-2H2a1 1 0 100 2h1z" clip-rule="evenodd"></path>
+            </svg>
+            <!-- Moon Icon -->
+            <svg id="theme-moon" class="w-4.5 h-4.5 text-slate-700 hidden" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+            </svg>
         </button>
     </div>
 
-    <!-- Custom Confirm Reset Dialog -->
-    <div id="confirm-modal" class="fixed inset-0 bg-slate-900/60 hidden flex items-center justify-center p-6 z-50 backdrop-blur-sm">
-        <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 w-full max-w-xs text-center shadow-2xl border border-slate-100 dark:border-slate-700">
-            <div class="text-3xl mb-2">🤔</div>
-            <h2 class="text-lg font-bold text-slate-800 dark:text-slate-100 mb-1">Give Up Already?</h2>
-            <p class="text-xs text-slate-500 dark:text-slate-400 mb-4">Are you sure you want to reveal all icons and start over?</p>
-            <div class="flex gap-2">
-                <button onclick="confirmGiveUp()" class="flex-1 py-2 bg-red-500 text-white font-bold text-xs rounded-lg hover:bg-red-600 transition-colors">Yes, Reset</button>
-                <button onclick="closeConfirm()" class="flex-1 py-2 bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-slate-200 font-bold text-xs rounded-lg hover:bg-slate-300 dark:hover:bg-slate-600 transition-colors">No, Keep Playing</button>
+    <div class="app-container w-full max-w-[390px] px-5 mt-3">
+        
+        <!-- Live Status Hub / Progress HUD -->
+        <div class="flex justify-between items-center px-4 mb-4 text-[11px] font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-400 light:text-slate-600">
+            <div id="round-indicator" class="bg-indigo-500/10 text-indigo-400 light:text-indigo-700 px-3 py-1.5 rounded-full border border-indigo-500/20 light:border-indigo-500/30">Round 1/6</div>
+            <div class="flex items-center gap-3.5">
+                <div class="flex items-center gap-1.5 bg-emerald-500/10 text-emerald-500 light:text-emerald-700 px-3 py-1.5 rounded-full border border-emerald-500/20 light:border-emerald-500/30">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span id="score-correct" class="font-black">0</span>
+                </div>
+                <div class="flex items-center gap-1.5 bg-rose-500/10 text-rose-500 light:text-rose-700 px-3 py-1.5 rounded-full border border-rose-500/20 light:border-rose-500/30">
+                    <span class="w-2 h-2 rounded-full bg-rose-400"></span>
+                    <span id="score-wrong" class="font-black">0</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card rounded-[2.5rem] p-6 text-center">
+            
+            <!-- Setup & Configuration Screen -->
+            <div id="setup-screen" class="fade-in">
+                <h1 class="text-3xl font-extrabold mb-1 tracking-tight bg-gradient-to-r from-white to-slate-400 dark:from-white dark:to-slate-400 light:from-slate-900 light:to-slate-600 bg-clip-text text-transparent">Digit Dash</h1>
+                <p class="text-xs text-slate-400 dark:text-slate-400 light:text-slate-600 mb-8 font-medium">Memory challenge optimized for maximum retention</p>
+                
+                <p class="text-[11px] text-slate-400 dark:text-slate-400 light:text-slate-500 uppercase font-extrabold mb-3 text-left pl-1 tracking-widest">Number Length</p>
+                <div class="option-grid grid grid-cols-4 gap-2 mb-6">
+                    <button onclick="setDigits(7)" id="d7" class="btn-select active rounded-2xl font-bold">7</button>
+                    <button onclick="setDigits(8)" id="d8" class="btn-select rounded-2xl font-bold">8</button>
+                    <button onclick="setDigits(9)" id="d9" class="btn-select rounded-2xl font-bold">9</button>
+                    <button onclick="setDigits(10)" id="d10" class="btn-select rounded-2xl font-bold">10</button>
+                </div>
+
+                <p class="text-[11px] text-slate-400 dark:text-slate-400 light:text-slate-500 uppercase font-extrabold mb-3 text-left pl-1 tracking-widest">Exposure Window</p>
+                <div class="option-grid grid grid-cols-3 gap-2 mb-10">
+                    <button onclick="setTime(10)" id="t10" class="btn-select active rounded-2xl font-bold">10s</button>
+                    <button onclick="setTime(15)" id="t15" class="btn-select rounded-2xl font-bold">15s</button>
+                    <button onclick="setTime(20)" id="t20" class="btn-select rounded-2xl font-bold">20s</button>
+                </div>
+
+                <button onclick="startChallenge()" class="btn-tap-effect w-full bg-gradient-to-r from-indigo-500 to-indigo-600 hover:from-indigo-600 hover:to-indigo-700 active:from-indigo-700 active:to-indigo-800 py-5 min-h-[64px] rounded-2xl font-bold text-white shadow-lg shadow-indigo-500/25 uppercase text-sm tracking-widest flex items-center justify-center transition-all">
+                    Start Challenge
+                </button>
+            </div>
+
+            <!-- Memorize Sequence Screen (Featuring the Countdown Circle Overlay) -->
+            <div id="memorize-screen" class="hidden fade-in flex flex-col items-center">
+                <p class="text-[11px] text-indigo-400 dark:text-indigo-400 light:text-indigo-600 font-extrabold uppercase tracking-widest mb-1">Memorize Now</p>
+                
+                <!-- SVG Circle Countdown Ring Container -->
+                <div class="relative w-72 h-72 my-4 flex items-center justify-center">
+                    <svg class="absolute top-0 left-0 w-full h-full transform -rotate-90" viewBox="0 0 200 200">
+                        <!-- Background Circle Track -->
+                        <circle class="text-slate-800/40 light:text-slate-300" stroke-width="8" stroke="currentColor" fill="transparent" r="85" cx="100" cy="100" />
+                        <!-- Active Shrinking SVG Progress Circle (circumference is approx 534) -->
+                        <circle id="countdown-circle" class="text-indigo-500 dark:text-indigo-400 transition-all duration-75 ease-linear" stroke-width="8" stroke-dasharray="534" stroke-dashoffset="0" stroke-linecap="round" stroke="currentColor" fill="transparent" r="85" cx="100" cy="100" />
+                    </svg>
+                    <!-- Displayed sequence inside the circle -->
+                    <div class="z-10 text-center px-6 w-full flex flex-col justify-center items-center">
+                        <div id="number-display" class="digit-hero text-center break-all select-all py-1">0000000</div>
+                    </div>
+                </div>
+
+                <p class="text-xs text-slate-400 dark:text-slate-400 light:text-slate-500 font-semibold"><span id="timer-text" class="text-indigo-400 font-bold text-sm">10</span>s remaining</p>
+            </div>
+
+            <!-- Input Response Screen -->
+            <div id="input-screen" class="hidden fade-in">
+                <p class="text-sm font-semibold mb-6 text-slate-300 dark:text-slate-300 light:text-slate-700">What was the sequence?</p>
+                <input type="number" pattern="\d*" inputmode="numeric" id="user-input" autocomplete="off"
+                    class="w-full text-center font-bold py-5 bg-slate-800/40 dark:bg-slate-800/40 light:bg-slate-50 border border-slate-700/60 dark:border-slate-700/60 light:border-slate-300 rounded-2xl focus:border-indigo-500 dark:focus:border-indigo-500 focus:outline-none mb-6 text-white dark:text-white light:text-slate-900 transition-colors">
+                <button onclick="checkAnswer()" class="btn-tap-effect w-full bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 py-5 rounded-2xl font-bold text-white shadow-lg min-h-[60px] uppercase text-xs tracking-wider flex items-center justify-center">
+                    Submit Response
+                </button>
+            </div>
+
+            <!-- Intermediate Result Evaluation Screen -->
+            <div id="result-screen" class="hidden fade-in">
+                <div id="result-status" class="text-base font-bold uppercase mb-4"></div>
+                <div id="result-msg" class="text-sm text-slate-400 dark:text-slate-400 light:text-slate-600 mb-8 leading-relaxed"></div>
+                <button id="next-btn" onclick="nextRound()" class="btn-tap-effect w-full bg-slate-800 dark:bg-slate-800 light:bg-slate-200 light:text-slate-800 hover:bg-slate-750 py-5 rounded-2xl font-bold text-white min-h-[60px] flex items-center justify-center">
+                    Next Round
+                </button>
+            </div>
+
+            <!-- End Challenge Summary Screen -->
+            <div id="summary-screen" class="hidden fade-in">
+                <div class="text-indigo-400 text-4xl mb-3 animate-bounce">🏆</div>
+                <h2 class="text-2xl font-extrabold mb-1 bg-gradient-to-r from-white to-slate-300 dark:from-white dark:to-slate-300 light:from-slate-900 light:to-slate-700 bg-clip-text text-transparent">Challenge Completed</h2>
+                <p id="summary-date" class="text-[10px] text-slate-400 dark:text-slate-400 light:text-slate-500 uppercase font-extrabold mb-6 tracking-widest"></p>
+                
+                <!-- Chunky Score blocks -->
+                <div class="grid grid-cols-2 gap-3 mb-6">
+                    <div class="bg-slate-800/30 dark:bg-slate-800/30 light:bg-slate-200/50 p-5 rounded-3xl border border-slate-700/50 dark:border-slate-700/50 light:border-slate-300">
+                        <div class="text-3xl font-extrabold text-emerald-500 light:text-emerald-700" id="final-correct">0</div>
+                        <div class="text-[11px] text-slate-400 dark:text-slate-400 light:text-slate-600 uppercase font-black tracking-wider mt-1">Correct</div>
+                    </div>
+                    <div class="bg-slate-800/30 dark:bg-slate-800/30 light:bg-slate-200/50 p-5 rounded-3xl border border-slate-700/50 dark:border-slate-700/50 light:border-slate-300">
+                        <div class="text-3xl font-extrabold text-rose-500 light:text-rose-700" id="final-wrong">0</div>
+                        <div class="text-[11px] text-slate-400 dark:text-slate-400 light:text-slate-600 uppercase font-black tracking-wider mt-1">Wrong</div>
+                    </div>
+                </div>
+
+                <!-- Dynamic Visual Encouragement Message Section -->
+                <div id="encouragement-box" class="mb-6 p-5 rounded-3xl text-left bg-gradient-to-br from-indigo-500/10 to-purple-500/10 border border-indigo-500/20 shadow-inner">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="text-base">✨</span>
+                        <h4 class="text-xs font-black uppercase tracking-widest text-indigo-400 dark:text-indigo-300 light:text-indigo-700">Memory Coach Advice</h4>
+                    </div>
+                    <p id="encouragement-text" class="text-xs leading-relaxed text-slate-300 dark:text-slate-300 light:text-slate-800 font-medium"></p>
+                </div>
+
+                <!-- Custom AI Brain Power Analyst (Gemini API Integration) -->
+                <div id="ai-analyst-panel" class="mb-6 p-5 rounded-3xl bg-indigo-500/5 border border-indigo-500/15 text-left relative overflow-hidden">
+                    <div class="flex justify-between items-center mb-2">
+                        <div class="text-[10px] font-black tracking-widest text-indigo-400 dark:text-indigo-300 light:text-indigo-700 uppercase">AI Cognitive Diagnostic</div>
+                        <span class="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse"></span>
+                    </div>
+                    <!-- Loading skeleton -->
+                    <div id="ai-loading" class="space-y-2 py-1 animate-pulse">
+                        <div class="h-4 bg-slate-800 dark:bg-slate-800 light:bg-slate-200 rounded w-1/2"></div>
+                        <div class="h-4 bg-slate-800 dark:bg-slate-800 light:bg-slate-200 rounded w-5/6"></div>
+                        <div class="h-3.5 bg-slate-800 dark:bg-slate-800 light:bg-slate-200 rounded w-3/4"></div>
+                    </div>
+                    <!-- Target element for AI Evaluation -->
+                    <div id="ai-content" class="hidden">
+                        <h3 id="ai-brain-title" class="text-sm font-extrabold text-slate-100 dark:text-slate-100 light:text-slate-800 mb-1 leading-tight"></h3>
+                        <p id="ai-evaluation-text" class="text-[11px] leading-relaxed text-slate-400 dark:text-slate-400 light:text-slate-700"></p>
+                    </div>
+                </div>
+
+                <!-- Chunky Share Buttons with Expanded Spacing -->
+                <div class="flex flex-col gap-3">
+                    <button onclick="shareWhatsApp()" class="btn-tap-effect w-full bg-[#25D366] hover:bg-[#20ba59] active:bg-[#1a9446] py-4.5 min-h-[60px] rounded-2xl font-bold text-white shadow-md flex items-center justify-center gap-2.5 text-sm transition-all duration-150">
+                        <svg class="w-5.5 h-5.5 fill-current" viewBox="0 0 24 24"><path d="M12.031 6.172c-2.32 0-4.525.903-6.163 2.541-1.638 1.638-2.541 3.842-2.541 6.162 0 2.123.759 4.137 2.135 5.717l-1.396 5.097 5.223-1.371c1.503.82 3.197 1.254 4.919 1.254h.004c2.32 0 4.525-.903 6.163-2.541 1.638-1.638 2.541-3.842 2.541-6.162 0-2.32-.903-4.525-2.541-6.162-1.638-1.638-3.842-2.541-6.163-2.541zm5.286 11.75c-.218.614-1.282 1.154-1.782 1.22-.499.066-1.022.094-3.134-.78-2.697-1.118-4.444-3.86-4.579-4.039-.134-.179-1.096-1.455-1.096-2.777 0-1.322.692-1.97.942-2.233.25-.262.541-.328.72-.328.179 0 .359.001.517.009.166.008.388-.063.606.463.218.525.748 1.822.813 1.954.066.131.11.284.022.46-.088.176-.131.306-.262.46l-.394.46c-.131.153-.268.32-.116.58.152.26.677 1.114 1.45 1.804.994.888 1.832 1.163 2.094 1.293.262.131.415.109.57-.066.154-.175.66-.766.837-1.028.177-.262.354-.219.597-.131.243.087 1.547.731 1.812.863.266.131.442.197.508.306.066.11.066.634-.153 1.248z"/></svg>
+                        Share via WhatsApp
+                    </button>
+                    <button onclick="copyResults()" class="btn-tap-effect w-full bg-slate-700/50 dark:bg-slate-700/50 light:bg-slate-200 light:text-slate-800 border border-slate-600/50 dark:border-slate-600/50 light:border-slate-300 py-4 min-h-[60px] rounded-2xl font-bold text-white flex items-center justify-center gap-2.5 text-sm transition-all">
+                        Copy Result Text
+                    </button>
+                    <button onclick="resetToHome()" class="btn-tap-effect w-full bg-slate-800/60 dark:bg-slate-800/60 light:bg-slate-300 light:text-slate-950 hover:bg-slate-800 transition-all py-4 min-h-[60px] rounded-2xl font-bold text-slate-400 dark:text-slate-400 light:text-slate-800 mt-2 flex items-center justify-center text-sm">
+                        New Game
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Success Victory Modal -->
-    <div id="modal" class="fixed inset-0 bg-slate-900/60 hidden flex items-center justify-center p-6 z-50 backdrop-blur-sm">
-        <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 w-full max-w-xs text-center shadow-2xl border border-slate-100 dark:border-slate-700">
-            <div class="text-4xl mb-3">🏆</div>
-            <!-- Dynamic Encouragement Header -->
-            <h2 id="encouragement-title" class="text-xl font-black text-blue-600 dark:text-blue-400 leading-tight mb-2">Awesome Work!</h2>
-            <p id="result-text" class="text-xs text-slate-500 dark:text-slate-400 mb-5 leading-relaxed"></p>
-            <button onclick="shareResults()" class="w-full py-3 bg-green-500 text-white font-extrabold text-xs rounded-xl mb-2.5 flex items-center justify-center gap-2 shadow-lg shadow-green-500/20 active:scale-95 transition-transform">
-                💬 Share to WhatsApp
-            </button>
-            <button onclick="resetGame()" class="w-full py-3 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs rounded-xl hover:bg-slate-200 dark:hover:bg-slate-600 transition-all">
-                Play Again
-            </button>
-        </div>
-    </div>
+    <!-- Feedback Toast Notification -->
+    <div id="toast" class="copy-toast">Copied to clipboard!</div>
 
     <script>
-        // High density visual symbol stack (emoji deck)
-        const icons = ['🍎', '🍌', '🍇', '🍓', '🍒', '🍍', '🥝', '🍉', '🥑', '🥦', '🥕', '🌽', '🥨', '🍕', '🍔', '🍦', '🍩', '🌮', '🍣', '🥞', '🍱', '🍘', '🍙', '🍛', '🍜', '🍝', '🍞', '🧀', '🥚', '🥩'];
-        let difficulty = 'easy';
-        let previewSeconds = 5;
-        let flippedCards = [];
-        let moves = 0;
-        let matches = 0;
-        let isLocked = true;
-        let hintUsed = false;
+        // API Configuration - injected safely
+        const apiKey = "AQ.Ab8RN6LfcVqyMfwF9lkRTaS4rGxuyIK0PZSezsrYQNknIjXNBg"; 
+        let config = { digits: 7, time: 10 };
+        let stats = { correct: 0, wrong: 0, currentRound: 0 };
+        const TOTAL_ROUNDS = 6;
+        let currentNumber = "";
+        let timer;
+        let aiBrainTitleEvaluated = "";
+        let aiEvaluationEvaluated = "";
 
-        // Dynamic visual praise metrics matched to memory score and speed
-        const encouragementNotes = [
-            "Your visual memory is absolutely legendary! 🌟",
-            "An outstanding display of razor-sharp mental focus! ⚡",
-            "Incredible! Your brain's cognitive gears are running in high gear. 🧠🔥",
-            "A masterclass in concentration and quick reflexes! 🛸",
-            "Outstanding! Your neural mapping is absolutely flawless! 🧬",
-            "Superb! You tracked down every single pairing with total precision! 🎯"
-        ];
-
-        // Perfect, responsive grid proportions with optimal cell emoji scaling sizes
-        const config = {
-            easy: { rows: 4, cols: 3, pairs: 6, iconSize: '3rem', mysterySize: '1.8rem' },
-            medium: { rows: 4, cols: 4, pairs: 8, iconSize: '2.5rem', mysterySize: '1.6rem' },
-            hard: { rows: 6, cols: 5, pairs: 15, iconSize: '1.95rem', mysterySize: '1.25rem' }
-        };
-
-        // Theme switching handler
-        function toggleDarkMode() {
+        // UI Theme Handler
+        function toggleTheme() {
             const html = document.documentElement;
-            const toggleBtn = document.getElementById('theme-toggle');
-            if (html.classList.contains('dark')) {
-                html.classList.remove('dark');
-                toggleBtn.textContent = '🌙';
-                localStorage.setItem('theme', 'light');
-            } else {
+            const isLight = html.classList.contains('light');
+            
+            if (isLight) {
+                html.classList.remove('light');
                 html.classList.add('dark');
-                toggleBtn.textContent = '☀️';
-                localStorage.setItem('theme', 'dark');
-            }
-        }
-
-        // Apply saved theme preference on start
-        function initTheme() {
-            const savedTheme = localStorage.getItem('theme');
-            const toggleBtn = document.getElementById('theme-toggle');
-            if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                document.documentElement.classList.add('dark');
-                toggleBtn.textContent = '☀️';
+                document.getElementById('theme-sun').classList.remove('hidden');
+                document.getElementById('theme-moon').classList.add('hidden');
             } else {
-                document.documentElement.classList.remove('dark');
-                toggleBtn.textContent = '🌙';
+                html.classList.remove('dark');
+                html.classList.add('light');
+                document.getElementById('theme-sun').classList.add('hidden');
+                document.getElementById('theme-moon').classList.remove('hidden');
             }
         }
 
-        function setDifficulty(level) {
-            difficulty = level;
-            document.querySelectorAll('[id^="btn-"]').forEach(btn => btn.classList.remove('difficulty-active'));
-            document.getElementById(`btn-${level}`).classList.add('difficulty-active');
-            resetGame();
+        // Initialize default dark theme elements
+        window.onload = function() {
+            document.documentElement.classList.add('dark');
         }
 
-        function setPreviewTime(sec) {
-            previewSeconds = sec;
-            document.querySelectorAll('[id^="time-"]').forEach(btn => btn.classList.remove('timer-active'));
-            document.getElementById(`time-${sec}`).classList.add('timer-active');
-            resetGame();
-        }
-
-        function resetGame() {
-            const { pairs, cols, iconSize, mysterySize } = config[difficulty];
-            const grid = document.getElementById('game-grid');
-            grid.innerHTML = '';
-            grid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
-            
-            // Inject customized sizing metrics directly into variables
-            grid.style.setProperty('--icon-size', iconSize);
-            grid.style.setProperty('--mystery-size', mysterySize);
-            
-            moves = 0;
-            matches = 0;
-            flippedCards = [];
-            isLocked = true;
-            hintUsed = false;
-            
-            document.getElementById('move-count').textContent = moves;
-            document.getElementById('match-count').textContent = matches;
-            document.getElementById('total-pairs').textContent = pairs;
-            document.getElementById('modal').classList.add('hidden');
-            document.getElementById('confirm-modal').classList.add('hidden');
-            document.getElementById('hint-btn').disabled = true;
-            
-            const bar = document.getElementById('preview-bar');
-            bar.style.transition = 'none';
-            bar.style.width = '100%';
-
-            // Pick a randomized icon selection
-            const gameIcons = [...icons].sort(() => Math.random() - 0.5).slice(0, pairs);
-            const deck = [...gameIcons, ...gameIcons].sort(() => Math.random() - 0.5);
-
-            deck.forEach((icon) => {
-                const card = document.createElement('div');
-                card.className = 'card flipped';
-                card.dataset.icon = icon;
-                card.innerHTML = `
-                    <div class="card-inner">
-                        <div class="card-front">?</div>
-                        <div class="card-back">${icon}</div>
-                    </div>
-                `;
-                card.onclick = () => flipCard(card);
-                grid.appendChild(card);
+        // Setup Selection Toggles
+        function setDigits(n) {
+            config.digits = n;
+            ['d7', 'd8', 'd9', 'd10'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.classList.remove('active');
             });
-
-            // Trigger preview bar timer animation
-            setTimeout(() => {
-                bar.style.transition = `width ${previewSeconds}s linear`;
-                bar.style.width = '0%';
-                
-                setTimeout(() => {
-                    document.querySelectorAll('.card').forEach(c => c.classList.remove('flipped'));
-                    isLocked = false;
-                    document.getElementById('hint-btn').disabled = false;
-                }, previewSeconds * 1000);
-            }, 100);
+            document.getElementById('d' + n).classList.add('active');
         }
 
-        function flipCard(card) {
-            if (isLocked || card.classList.contains('flipped') || card.classList.contains('matched')) return;
-            card.classList.add('flipped');
-            flippedCards.push(card);
-            if (flippedCards.length === 2) {
-                moves++;
-                document.getElementById('move-count').textContent = moves;
-                checkMatch();
-            }
+        function setTime(s) {
+            config.time = s;
+            ['t10', 't15', 't20'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.classList.remove('active');
+            });
+            document.getElementById('t' + s).classList.add('active');
         }
 
-        function checkMatch() {
-            isLocked = true;
-            const [card1, card2] = flippedCards;
-            const match = card1.dataset.icon === card2.dataset.icon;
-            if (match) {
-                card1.classList.add('matched');
-                card2.classList.add('matched');
-                matches++;
-                document.getElementById('match-count').textContent = matches;
-                flippedCards = [];
-                isLocked = false;
-                if (matches === config[difficulty].pairs) {
-                    setTimeout(showWinScreen, 450);
+        // Gameplay Engine Operations
+        function startChallenge() {
+            stats.correct = 0;
+            stats.wrong = 0;
+            stats.currentRound = 0;
+            updateHUD();
+            nextRound();
+        }
+
+        function updateHUD() {
+            document.getElementById('score-correct').innerText = stats.correct;
+            document.getElementById('score-wrong').innerText = stats.wrong;
+            document.getElementById('round-indicator').innerText = `Round ${Math.min(stats.currentRound + 1, TOTAL_ROUNDS)}/${TOTAL_ROUNDS}`;
+        }
+
+        function generateUniqueSequence(len) {
+            const pool = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+            let result = "";
+            for (let i = 0; i < len; i++) {
+                if (pool.length === 0) {
+                    [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].forEach(n => pool.push(n));
                 }
-            } else {
-                setTimeout(() => {
-                    card1.classList.remove('flipped');
-                    card2.classList.remove('flipped');
-                    flippedCards = [];
-                    isLocked = false;
-                }, 750);
+                const randomIndex = Math.floor(Math.random() * pool.length);
+                result += pool.splice(randomIndex, 1)[0];
             }
+            return result;
         }
 
-        function showHint() {
-            if (isLocked || hintUsed) return;
-            hintUsed = true;
-            isLocked = true;
-            const allCards = document.querySelectorAll('.card:not(.matched)');
-            allCards.forEach(c => c.classList.add('flipped'));
-            document.getElementById('hint-btn').disabled = true;
-            setTimeout(() => {
-                allCards.forEach(c => {
-                    if (!flippedCards.includes(c)) c.classList.remove('flipped');
-                });
-                isLocked = false;
-            }, 1000);
-        }
-
-        function triggerGiveUpConfirm() {
-            document.getElementById('confirm-modal').classList.remove('hidden');
-        }
-
-        function closeConfirm() {
-            document.getElementById('confirm-modal').classList.add('hidden');
-        }
-
-        function confirmGiveUp() {
-            document.getElementById('confirm-modal').classList.add('hidden');
-            document.querySelectorAll('.card').forEach(c => {
-                c.classList.add('flipped');
-                c.classList.add('matched');
-            });
-            isLocked = true;
-        }
-
-        function showWinScreen() {
-            const date = new Date().toLocaleDateString();
-            const randomNote = encouragementNotes[Math.floor(Math.random() * encouragementNotes.length)];
+        function nextRound() {
+            stats.currentRound++;
+            if (stats.currentRound > TOTAL_ROUNDS) {
+                showSummary();
+                return;
+            }
+            updateHUD();
+            currentNumber = generateUniqueSequence(config.digits);
             
-            document.getElementById('encouragement-title').innerText = randomNote;
-            document.getElementById('result-text').innerText = `Difficulty: ${difficulty.toUpperCase()}\nMoves Taken: ${moves}\nPlayed: ${date}`;
-            document.getElementById('modal').classList.remove('hidden');
+            // Adjust sequence text size to dynamically fit perfectly inside the countdown circle
+            const displayEl = document.getElementById('number-display');
+            displayEl.innerText = currentNumber;
+            if (config.digits >= 10) {
+                displayEl.style.fontSize = '1.85rem';
+                displayEl.style.letterSpacing = '0.075rem';
+            } else if (config.digits >= 9) {
+                displayEl.style.fontSize = '2.1rem';
+                displayEl.style.letterSpacing = '0.125rem';
+            } else if (config.digits >= 8) {
+                displayEl.style.fontSize = '2.4rem';
+                displayEl.style.letterSpacing = '0.18rem';
+            } else {
+                displayEl.style.fontSize = '2.75rem';
+                displayEl.style.letterSpacing = '0.25rem';
+            }
+
+            show('memorize-screen');
+            
+            let start = Date.now();
+            let limit = config.time * 1000;
+            
+            timer = setInterval(() => {
+                let diff = Date.now() - start;
+                let rem = Math.max(0, limit - diff);
+                
+                // SVG Progress Circle stroke math (radius is 85, circumference ≈ 534)
+                let strokeOffset = 534 * (1 - (rem / limit));
+                document.getElementById('countdown-circle').setAttribute('stroke-dashoffset', strokeOffset);
+                document.getElementById('timer-text').innerText = Math.ceil(rem / 1000);
+                
+                if (rem <= 0) {
+                    clearInterval(timer);
+                    showInput();
+                }
+            }, 30);
         }
 
-        function shareResults() {
+        function showInput() {
+            show('input-screen');
+            const inp = document.getElementById('user-input');
+            inp.value = "";
+            setTimeout(() => {
+                inp.focus();
+            }, 100);
+            inp.onkeyup = (e) => { if(e.key === 'Enter') checkAnswer(); };
+        }
+
+        function checkAnswer() {
+            const val = document.getElementById('user-input').value;
+            const status = document.getElementById('result-status');
+            const msg = document.getElementById('result-msg');
+            const nextBtn = document.getElementById('next-btn');
+            
+            show('result-screen');
+            
+            if (val === currentNumber) {
+                stats.correct++;
+                status.innerText = "✓ Correct Answer";
+                status.className = "text-emerald-500 light:text-emerald-600 text-base font-bold uppercase mb-2";
+                msg.innerHTML = `You memorized <span class="text-indigo-500 light:text-indigo-600 font-extrabold tracking-widest">${currentNumber}</span> correctly.`;
+            } else {
+                stats.wrong++;
+                status.innerText = "✕ Misremembered";
+                status.className = "text-rose-500 light:text-rose-600 text-base font-bold uppercase mb-2";
+                msg.innerHTML = `Target sequence: <span class="text-white dark:text-white light:text-slate-900 font-extrabold tracking-widest">${currentNumber}</span><br>You entered: <span class="text-rose-500 light:text-rose-600 font-bold">${val || 'nothing'}</span>`;
+            }
+
+            if (stats.currentRound >= TOTAL_ROUNDS) {
+                nextBtn.innerText = "VIEW EVALUATION";
+                nextBtn.className = "btn-tap-effect w-full bg-indigo-600 hover:bg-indigo-700 py-5 rounded-2xl font-bold text-white shadow-lg uppercase text-sm tracking-widest min-h-[60px] flex items-center justify-center";
+            } else {
+                nextBtn.innerText = "NEXT ROUND";
+                nextBtn.className = "btn-tap-effect w-full bg-slate-800 dark:bg-slate-800 light:bg-slate-200 light:text-slate-800 py-5 rounded-2xl font-bold text-white uppercase text-sm tracking-widest min-h-[60px] flex items-center justify-center";
+            }
+            
+            updateHUD();
+        }
+
+        function getDynamicEncouragement(correct) {
+            const messages = {
+                6: "Incredible hustle! You achieved complete memory lock and processed all sequences perfectly. Your neural pathways are operating at peak bandwidth!",
+                5: "Outstanding job! You matched almost every unique sequence under intense pressure. Just one minor parity error—keep it up!",
+                4: "Fabulous effort! You have solid intermediate short-term retention. Daily training will expand your sequence buffer even further.",
+                3: "Awesome fight! Your cognitive circuits are actively building stronger synapses with every session. Reset and go again!",
+                2: "Brilliant effort! Pushing your memory limits builds mental resilience. Every attempt—win or lose—grows your processing speed.",
+                1: "Fantastic try! Brain training is all about persistence. Don't worry about the score; focus on building the rhythm and try again!",
+                0: "Excellent attempt! You're actively sparking neuroplasticity just by attempting these fast-paced sequences. Your brain is getting stronger!"
+            };
+            return messages[correct] || messages[0];
+        }
+
+        async function fetchAIEvaluation() {
+            const loadingPanel = document.getElementById('ai-loading');
+            const contentPanel = document.getElementById('ai-content');
+            loadingPanel.classList.remove('hidden');
+            contentPanel.classList.add('hidden');
+
+            const query = `Analyze this memory challenge score: ${stats.correct} correct, ${stats.wrong} wrong out of 6 rounds. The setting was ${config.digits} digits per sequence, exposed for ${config.time} seconds. Create a playful custom memory "Brain Title" (e.g. "Quantum Megahertz" or "Goldfish Processing Core") and a short 2-sentence encouraging memory diagnosis. Formulate as JSON only containing keys 'title' and 'evaluation'.`;
+            
+            let attempts = 0;
+            const maxAttempts = 3;
+            let success = false;
+            let responseData = null;
+
+            while (attempts < maxAttempts && !success) {
+                try {
+                    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            contents: [{ parts: [{ text: query }] }],
+                            generationConfig: {
+                                responseMimeType: "application/json",
+                                responseSchema: {
+                                    type: "OBJECT",
+                                    properties: {
+                                        title: { type: "STRING" },
+                                        evaluation: { type: "STRING" }
+                                    },
+                                    required: ["title", "evaluation"]
+                                }
+                            }
+                        })
+                    });
+
+                    if (response.ok) {
+                        const json = await response.json();
+                        const text = json.candidates?.[0]?.content?.parts?.[0]?.text;
+                        if (text) {
+                            responseData = JSON.parse(text);
+                            success = true;
+                        }
+                    }
+                } catch (err) {
+                    // Fail silently
+                }
+
+                if (!success) {
+                    attempts++;
+                    if (attempts < maxAttempts) {
+                        await new Promise(resolve => setTimeout(resolve, Math.pow(2, attempts - 1) * 1000));
+                    }
+                }
+            }
+
+            loadingPanel.classList.add('hidden');
+            contentPanel.classList.remove('hidden');
+
+            if (success && responseData) {
+                aiBrainTitleEvaluated = responseData.title;
+                aiEvaluationEvaluated = responseData.evaluation;
+            } else {
+                // Fallback analysis evaluations
+                const scoreRatio = stats.correct / TOTAL_ROUNDS;
+                if (scoreRatio === 1) {
+                    aiBrainTitleEvaluated = "Hyper-threaded Superchip";
+                    aiEvaluationEvaluated = "Absolute flawless capacity. Your brain processed every sequence without a single bit leak.";
+                } else if (scoreRatio >= 0.6) {
+                    aiBrainTitleEvaluated = "SRAM Memory Bank";
+                    aiEvaluationEvaluated = "Highly reliable temporary buffer registers. Just minor noise in the signal path.";
+                } else {
+                    aiBrainTitleEvaluated = "Volatile Magnetic Tape";
+                    aiEvaluationEvaluated = "Decent attempts, but your registers encountered parity check errors. Keep practicing to speed up your synaptic cycle!";
+                }
+            }
+
+            document.getElementById('ai-brain-title').innerText = aiBrainTitleEvaluated;
+            document.getElementById('ai-evaluation-text').innerText = aiEvaluationEvaluated;
+        }
+
+        function showSummary() {
+            show('summary-screen');
+            document.getElementById('final-correct').innerText = stats.correct;
+            document.getElementById('final-wrong').innerText = stats.wrong;
+            
+            // Present the encouragement message instantly
+            document.getElementById('encouragement-text').innerText = getDynamicEncouragement(stats.correct);
+
+            const now = new Date();
+            document.getElementById('summary-date').innerText = now.toLocaleDateString(undefined, { 
+                year: 'numeric', month: 'short', day: 'numeric' 
+            });
+            fetchAIEvaluation();
+        }
+
+        function getShareText() {
             const date = new Date().toLocaleDateString();
-            const text = `🧠 Brain Exercise Complete!\n\nDifficulty: ${difficulty.toUpperCase()}\nMoves: ${moves}\nDate: ${date}\n\nCan you beat my score? Play now!`;
-            const url = `whatsapp://send?text=${encodeURIComponent(text)}`;
-            window.location.href = url;
+            const brainPowerInfo = aiBrainTitleEvaluated ? `\n🧠 Diagnostic: ${aiBrainTitleEvaluated}` : '';
+            return `Digit Dash Challenge 🏆\nDate: ${date}\nDigits: ${config.digits} (Unique)\nTimer: ${config.time}s\nScore: ${stats.correct} Correct, ${stats.wrong} Wrong${brainPowerInfo}\nCan you beat my speed?`;
         }
 
-        // Initialize board configuration on system window load
-        window.onload = () => {
-            initTheme();
-            setPreviewTime(5);
-            setDifficulty('easy');
-        };
+        function shareWhatsApp() {
+            const text = encodeURIComponent(getShareText());
+            window.open(`whatsapp://send?text=${text}`, '_blank');
+        }
+
+        function copyResults() {
+            const text = getShareText();
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                const toast = document.getElementById('toast');
+                toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 2000);
+            } catch (err) {
+                console.error('Failed to copy', err);
+            }
+            document.body.removeChild(textArea);
+        }
+
+        function resetToHome() {
+            stats.correct = 0;
+            stats.wrong = 0;
+            stats.currentRound = 0;
+            updateHUD();
+            show('setup-screen');
+        }
+
+        function show(id) {
+            if (document.activeElement && document.activeElement.tagName === "INPUT") {
+                document.activeElement.blur();
+            }
+            ['setup-screen', 'memorize-screen', 'input-screen', 'result-screen', 'summary-screen'].forEach(s => {
+                document.getElementById(s).classList.add('hidden');
+            });
+            document.getElementById(id).classList.remove('hidden');
+        }
     </script>
 </body>
 </html>
