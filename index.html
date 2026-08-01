@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en" class="light">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Digit Dash - Memory Challenge</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -26,92 +26,80 @@
             user-select: none;
         }
 
-        /* Default Dark Mode background */
+        /* Default Light Mode */
+        html.light body {
+            background-color: #f0f4f9;
+            color: #0f172a;
+        }
+
+        /* Dark Mode overrides */
         html.dark body {
             background-color: #0b0f19;
             color: #f1f5f9;
         }
 
-        /* High-contrast Light Mode overrides */
-        html.light body {
-            background-color: #f1f5f9;
-            color: #0f172a;
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(15, 23, 42, 0.08);
+            box-shadow: 0 20px 40px -15px rgba(15, 23, 42, 0.08);
+            transition: background-color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
         }
 
-        .glass-card {
+        html.dark .glass-card {
             background: rgba(30, 41, 59, 0.7);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.08);
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.45);
-            transition: background-color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
         }
 
-        html.light .glass-card {
-            background: rgba(255, 255, 255, 0.95);
-            border: 1px solid rgba(15, 23, 42, 0.12);
-            box-shadow: 0 20px 40px -15px rgba(15, 23, 42, 0.1);
-        }
-
-        /* Maximized, chunky touch button targets that fill mobile screens generously */
+        /* Maximized, chunky touch button targets */
         .btn-select {
-            background: rgba(255, 255, 255, 0.04);
-            border: 2px solid rgba(255, 255, 255, 0.08);
-            color: #e2e8f0;
+            background: rgba(15, 23, 42, 0.05);
+            border: 2px solid rgba(15, 23, 42, 0.12);
+            color: #1e293b;
             transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
             -webkit-tap-highlight-color: transparent;
             cursor: pointer;
-            min-height: 64px;
-            font-size: 1.125rem;
+            min-height: 40px;
+            font-size: 0.875rem;
         }
 
-        html.light .btn-select {
-            background: rgba(15, 23, 42, 0.05);
-            border: 2px solid rgba(15, 23, 42, 0.15);
-            color: #1e293b;
+        html.dark .btn-select {
+            background: rgba(255, 255, 255, 0.04);
+            border: 2px solid rgba(255, 255, 255, 0.08);
+            color: #e2e8f0;
         }
 
-        /* Enhanced tactile hover/active states for light and dark modes */
         .btn-select:hover:not(.active) {
-            background: rgba(255, 255, 255, 0.08);
-            border-color: rgba(255, 255, 255, 0.2);
+            background: rgba(15, 23, 42, 0.08);
+            border-color: rgba(15, 23, 42, 0.25);
             transform: translateY(-1px);
         }
 
-        html.light .btn-select:hover:not(.active) {
-            background: rgba(15, 23, 42, 0.08);
-            border-color: rgba(15, 23, 42, 0.3);
+        html.dark .btn-select:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
         }
 
         .btn-select.active {
-            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
-            border-color: #818cf8;
-            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.45), inset 0 2px 4px rgba(255, 255, 255, 0.2);
+            background: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%);
+            border-color: #4f46e5;
+            box-shadow: 0 6px 18px rgba(79, 70, 229, 0.35);
             color: #ffffff !important;
             transform: scale(1.03);
         }
 
-        html.light .btn-select.active {
-            background: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%);
-            border-color: #4f46e5;
-            box-shadow: 0 6px 18px rgba(79, 70, 229, 0.35);
+        html.dark .btn-select.active {
+            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+            border-color: #818cf8;
+            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.45), inset 0 2px 4px rgba(255, 255, 255, 0.2);
         }
 
         .btn-select:active {
             transform: scale(0.95);
-            background: rgba(255, 255, 255, 0.12);
         }
 
-        html.light .btn-select:active {
-            background: rgba(15, 23, 42, 0.12);
-        }
-
-        .btn-select.active:active {
-            transform: scale(0.97);
-            background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%);
-        }
-
-        /* Big-touch generic CTA animation */
         .btn-tap-effect {
             transition: transform 0.1s ease, filter 0.1s ease;
             -webkit-tap-highlight-color: transparent;
@@ -123,23 +111,22 @@
         }
 
         .digit-hero {
-            font-size: 3.25rem;
+            font-size: 3.84rem;
             font-weight: 800;
-            letter-spacing: 0.25rem;
+            letter-spacing: 0.15rem;
             font-variant-numeric: tabular-nums;
+            background: linear-gradient(135deg, #4f46e5 0%, #312e81 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        html.dark .digit-hero {
             background: linear-gradient(135deg, #a5b4fc 0%, #6366f1 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             text-shadow: 0 4px 16px rgba(99, 102, 241, 0.25);
         }
 
-        html.light .digit-hero {
-            background: linear-gradient(135deg, #4f46e5 0%, #312e81 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        /* Entry animations */
         .fade-in {
             animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
@@ -181,166 +168,219 @@
             transform: translateX(-50%) translateY(0);
         }
 
-        /* High-contrast colors for utility text inside light mode */
-        html.light .text-slate-400 {
-            color: #475569 !important;
+        /* Circular icon button style matching attachment */
+        .circle-icon-btn {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #cbd5e1;
+            color: #475569;
+            transition: all 0.2s ease;
         }
-        html.light .text-slate-300 {
-            color: #1e293b !important;
+
+        html.dark .circle-icon-btn {
+            background-color: #334155;
+            color: #cbd5e1;
         }
-        html.light .text-slate-500 {
-            color: #334155 !important;
+
+        .circle-icon-btn:hover {
+            transform: scale(1.05);
+            background-color: #94a3b8;
+            color: #0f172a;
         }
-        html.light .bg-slate-800\/60 {
-            background-color: #e2e8f0 !important;
+
+        html.dark .circle-icon-btn:hover {
+            background-color: #475569;
+            color: #ffffff;
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col items-center justify-start overflow-y-auto pb-12">
+<body class="min-h-screen flex flex-col items-center justify-between pb-3">
 
-    <!-- Top Navigation Utilities bar -->
-    <div class="w-full max-w-[390px] px-5 pt-4 flex justify-between items-center z-50">
-        <span class="text-[11px] font-black tracking-widest text-indigo-500 dark:text-indigo-400 uppercase">Dash v2.3</span>
-        
-        <button onclick="toggleTheme()" class="btn-tap-effect p-3.5 rounded-full bg-slate-800/60 dark:bg-slate-800/40 border border-slate-700/50 light:border-slate-300/50 hover:scale-105 transition-all outline-none" aria-label="Toggle theme">
-            <!-- Sun Icon -->
-            <svg id="theme-sun" class="w-4.5 h-4.5 text-amber-400 block dark:block" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 17.95a1 1 0 01-1.414-1.414l.707-.707a1 1 0 111.414 1.414l-.707.707zm1.414-10.607a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 1.414l-.707.707zM3 11a1 1 0 100-2H2a1 1 0 100 2h1z" clip-rule="evenodd"></path>
-            </svg>
-            <!-- Moon Icon -->
-            <svg id="theme-moon" class="w-4.5 h-4.5 text-slate-700 hidden" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
-            </svg>
-        </button>
-    </div>
+    <div class="w-full max-w-[390px] px-4 pt-2 sm:pt-3">
+        <!-- Top Title Row & Action Buttons Header -->
+        <div class="flex justify-between items-start mb-2">
+            <!-- Brand Logo with PRO badge -->
+            <div>
+                <div class="flex items-center gap-1.5">
+                    <h1 class="text-2xl font-black tracking-tight text-slate-900 dark:text-white uppercase leading-none">
+                        DIGIT <span class="text-indigo-600 dark:text-indigo-400">DASH</span>
+                    </h1>
+                    <span class="bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 text-[10px] font-black px-1.5 py-0.5 rounded-md tracking-wider uppercase">PRO</span>
+                </div>
+                
+                <!-- Circular Icon Controls (Sound + Theme) -->
+                <div class="flex items-center gap-2 mt-2">
+                    <!-- Sound Toggle Button -->
+                    <button onclick="toggleSound()" id="sound-btn" class="circle-icon-btn btn-tap-effect" aria-label="Toggle sound">
+                        <svg id="sound-icon-on" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM14.657 2.929a1 1 0 011.414 0A9.972 9.972 0 0119 10a9.972 9.972 0 01-2.929 7.071 1 1 0 01-1.414-1.414A7.971 7.971 0 0017 10c0-2.21-.894-4.208-2.343-5.657a1 1 0 010-1.414zm-2.829 2.828a1 1 0 011.414 0A5.983 5.983 0 0115 10a5.983 5.983 0 01-1.757 4.243 1 1 0 01-1.414-1.414A3.983 3.983 0 0013 10a3.983 3.983 0 00-1.172-2.828 1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                        </svg>
+                        <svg id="sound-icon-off" class="w-5 h-5 hidden" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM12.293 7.293a1 1 0 011.414 0L15 8.586l1.293-1.293a1 1 0 111.414 1.414L16.414 10l1.293 1.293a1 1 0 01-1.414 1.414L15 11.414l-1.293 1.293a1 1 0 01-1.414-1.414L13.586 10l-1.293-1.293a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                        </svg>
+                    </button>
 
-    <div class="app-container w-full max-w-[390px] px-5 mt-3">
-        
-        <!-- Live Status Hub / Progress HUD -->
-        <div class="flex justify-between items-center px-4 mb-4 text-[11px] font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-400 light:text-slate-600">
-            <div id="round-indicator" class="bg-indigo-500/10 text-indigo-400 light:text-indigo-700 px-3 py-1.5 rounded-full border border-indigo-500/20 light:border-indigo-500/30">Round 1/6</div>
-            <div class="flex items-center gap-3.5">
-                <div class="flex items-center gap-1.5 bg-emerald-500/10 text-emerald-500 light:text-emerald-700 px-3 py-1.5 rounded-full border border-emerald-500/20 light:border-emerald-500/30">
-                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <!-- Proper Light/Dark Theme Toggle Button -->
+                    <button onclick="toggleTheme()" class="circle-icon-btn btn-tap-effect" aria-label="Toggle theme">
+                        <!-- Sun Icon (shows in Dark Mode to switch to Light) -->
+                        <svg id="theme-sun" class="w-5 h-5 hidden" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 17.95a1 1 0 01-1.414-1.414l.707-.707a1 1 0 111.414 1.414l-.707.707zm1.414-10.607a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 1.414l-.707.707zM3 11a1 1 0 100-2H2a1 1 0 100 2h1z" clip-rule="evenodd"></path>
+                        </svg>
+                        <!-- Moon Icon (shows in Light Mode to switch to Dark) -->
+                        <svg id="theme-moon" class="w-5 h-5 block" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Top Right Action (Reset / Give Up) -->
+            <div class="flex flex-col items-end gap-2">
+                <button onclick="resetToHome()" class="btn-tap-effect bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 font-extrabold text-xs px-3.5 py-2.5 rounded-2xl flex items-center gap-1.5 border border-rose-500/20">
+                    <span>🏁</span>
+                    <span class="tracking-wider uppercase">RESET</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Combined Status Row (Round Indicator & Accuracy Tracker on the same line) -->
+        <div class="flex items-center justify-between gap-2 mb-1.5">
+            <!-- Round Indicator Pill -->
+            <div class="inline-flex items-center gap-2 bg-indigo-500/15 dark:bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 font-black text-xs px-3 py-1 rounded-full border border-indigo-500/20 tracking-widest uppercase">
+                <span id="round-indicator">ROUND: 1 / 6</span>
+            </div>
+
+            <!-- Accuracy Tracker Scores -->
+            <div class="flex items-center gap-2">
+                <span class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider hidden sm:inline">Accuracy</span>
+                <div class="flex items-center gap-1.5 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 px-2.5 py-1 rounded-full border border-emerald-500/20 text-xs">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                     <span id="score-correct" class="font-black">0</span>
                 </div>
-                <div class="flex items-center gap-1.5 bg-rose-500/10 text-rose-500 light:text-rose-700 px-3 py-1.5 rounded-full border border-rose-500/20 light:border-rose-500/30">
-                    <span class="w-2 h-2 rounded-full bg-rose-400"></span>
+                <div class="flex items-center gap-1.5 bg-rose-500/10 text-rose-700 dark:text-rose-400 px-2.5 py-1 rounded-full border border-rose-500/20 text-xs">
+                    <span class="w-2 h-2 rounded-full bg-rose-500"></span>
                     <span id="score-wrong" class="font-black">0</span>
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="glass-card rounded-[2.5rem] p-6 text-center">
+    <div class="app-container w-full max-w-[390px] px-2">
+        
+        <div class="glass-card rounded-3xl p-2.5 sm:p-3 text-center">
             
-            <!-- Setup & Configuration Screen -->
-            <div id="setup-screen" class="fade-in">
-                <h1 class="text-3xl font-extrabold mb-1 tracking-tight bg-gradient-to-r from-white to-slate-400 dark:from-white dark:to-slate-400 light:from-slate-900 light:to-slate-600 bg-clip-text text-transparent">Digit Dash</h1>
-                <p class="text-xs text-slate-400 dark:text-slate-400 light:text-slate-600 mb-8 font-medium">Memory challenge optimized for maximum retention</p>
+            <!-- Main Game Workspace (Combines Config, Memorize Ring, and Input on One Screen) -->
+            <div id="game-workspace" class="fade-in">
                 
-                <p class="text-[11px] text-slate-400 dark:text-slate-400 light:text-slate-500 uppercase font-extrabold mb-3 text-left pl-1 tracking-widest">Number Length</p>
-                <div class="option-grid grid grid-cols-4 gap-2 mb-6">
-                    <button onclick="setDigits(7)" id="d7" class="btn-select active rounded-2xl font-bold">7</button>
-                    <button onclick="setDigits(8)" id="d8" class="btn-select rounded-2xl font-bold">8</button>
-                    <button onclick="setDigits(9)" id="d9" class="btn-select rounded-2xl font-bold">9</button>
-                    <button onclick="setDigits(10)" id="d10" class="btn-select rounded-2xl font-bold">10</button>
-                </div>
-
-                <p class="text-[11px] text-slate-400 dark:text-slate-400 light:text-slate-500 uppercase font-extrabold mb-3 text-left pl-1 tracking-widest">Exposure Window</p>
-                <div class="option-grid grid grid-cols-3 gap-2 mb-10">
-                    <button onclick="setTime(10)" id="t10" class="btn-select active rounded-2xl font-bold">10s</button>
-                    <button onclick="setTime(15)" id="t15" class="btn-select rounded-2xl font-bold">15s</button>
-                    <button onclick="setTime(20)" id="t20" class="btn-select rounded-2xl font-bold">20s</button>
-                </div>
-
-                <button onclick="startChallenge()" class="btn-tap-effect w-full bg-gradient-to-r from-indigo-500 to-indigo-600 hover:from-indigo-600 hover:to-indigo-700 active:from-indigo-700 active:to-indigo-800 py-5 min-h-[64px] rounded-2xl font-bold text-white shadow-lg shadow-indigo-500/25 uppercase text-sm tracking-widest flex items-center justify-center transition-all">
-                    Start Challenge
-                </button>
-            </div>
-
-            <!-- Memorize Sequence Screen (Featuring the Countdown Circle Overlay) -->
-            <div id="memorize-screen" class="hidden fade-in flex flex-col items-center">
-                <p class="text-[11px] text-indigo-400 dark:text-indigo-400 light:text-indigo-600 font-extrabold uppercase tracking-widest mb-1">Memorize Now</p>
-                
-                <!-- SVG Circle Countdown Ring Container -->
-                <div class="relative w-72 h-72 my-4 flex items-center justify-center">
-                    <svg class="absolute top-0 left-0 w-full h-full transform -rotate-90" viewBox="0 0 200 200">
-                        <!-- Background Circle Track -->
-                        <circle class="text-slate-800/40 light:text-slate-300" stroke-width="8" stroke="currentColor" fill="transparent" r="85" cx="100" cy="100" />
-                        <!-- Active Shrinking SVG Progress Circle (circumference is approx 534) -->
-                        <circle id="countdown-circle" class="text-indigo-500 dark:text-indigo-400 transition-all duration-75 ease-linear" stroke-width="8" stroke-dasharray="534" stroke-dashoffset="0" stroke-linecap="round" stroke="currentColor" fill="transparent" r="85" cx="100" cy="100" />
-                    </svg>
-                    <!-- Displayed sequence inside the circle -->
-                    <div class="z-10 text-center px-6 w-full flex flex-col justify-center items-center">
-                        <div id="number-display" class="digit-hero text-center break-all select-all py-1">0000000</div>
+                <!-- Inline Configuration Bar (Number Length & Exposure Window) -->
+                <div id="config-panel" class="mb-2 transition-opacity duration-300">
+                    <div class="flex justify-between items-center mb-1 px-1">
+                        <span class="text-[11px] text-slate-400 dark:text-slate-400 light:text-slate-500 uppercase font-extrabold tracking-widest">Length</span>
+                        <span class="text-[11px] text-slate-400 dark:text-slate-400 light:text-slate-500 uppercase font-extrabold tracking-widest">Exposure</span>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-2 mb-1">
+                        <!-- Number Length Selector -->
+                        <div class="grid grid-cols-4 gap-1 bg-slate-800/40 dark:bg-slate-800/40 light:bg-slate-200/60 p-1 rounded-2xl border border-slate-700/50 light:border-slate-300">
+                            <button onclick="setDigits(7)" id="d7" class="btn-select active !min-h-[36px] !text-xs rounded-xl font-bold">7</button>
+                            <button onclick="setDigits(8)" id="d8" class="btn-select !min-h-[36px] !text-xs rounded-xl font-bold">8</button>
+                            <button onclick="setDigits(9)" id="d9" class="btn-select !min-h-[36px] !text-xs rounded-xl font-bold">9</button>
+                            <button onclick="setDigits(10)" id="d10" class="btn-select !min-h-[36px] !text-xs rounded-xl font-bold">10</button>
+                        </div>
+                        
+                        <!-- Exposure Window Selector -->
+                        <div class="grid grid-cols-3 gap-1 bg-slate-800/40 dark:bg-slate-800/40 light:bg-slate-200/60 p-1 rounded-2xl border border-slate-700/50 light:border-slate-300">
+                            <button onclick="setTime(10)" id="t10" class="btn-select active !min-h-[36px] !text-xs rounded-xl font-bold">10s</button>
+                            <button onclick="setTime(15)" id="t15" class="btn-select !min-h-[36px] !text-xs rounded-xl font-bold">15s</button>
+                            <button onclick="setTime(20)" id="t20" class="btn-select !min-h-[36px] !text-xs rounded-xl font-bold">20s</button>
+                        </div>
                     </div>
                 </div>
 
-                <p class="text-xs text-slate-400 dark:text-slate-400 light:text-slate-500 font-semibold"><span id="timer-text" class="text-indigo-400 font-bold text-sm">10</span>s remaining</p>
-            </div>
+                <!-- Central Game Display Arena -->
+                <div class="relative w-[258px] h-[258px] sm:w-[288px] sm:h-[288px] mx-auto my-0.5 flex items-center justify-center">
+                    <svg class="absolute top-0 left-0 w-full h-full transform -rotate-90" viewBox="0 0 200 200">
+                        <!-- Background Circle Track -->
+                        <circle class="text-slate-800/40 light:text-slate-300" stroke-width="8" stroke="currentColor" fill="transparent" r="85" cx="100" cy="100" />
+                        <!-- Active Shrinking SVG Progress Circle -->
+                        <circle id="countdown-circle" class="text-indigo-500 dark:text-indigo-400 transition-all duration-75 ease-linear" stroke-width="8" stroke-dasharray="534" stroke-dashoffset="0" stroke-linecap="round" stroke="currentColor" fill="transparent" r="85" cx="100" cy="100" />
+                    </svg>
 
-            <!-- Input Response Screen -->
-            <div id="input-screen" class="hidden fade-in">
-                <p class="text-sm font-semibold mb-6 text-slate-300 dark:text-slate-300 light:text-slate-700">What was the sequence?</p>
-                <input type="number" pattern="\d*" inputmode="numeric" id="user-input" autocomplete="off"
-                    class="w-full text-center font-bold py-5 bg-slate-800/40 dark:bg-slate-800/40 light:bg-slate-50 border border-slate-700/60 dark:border-slate-700/60 light:border-slate-300 rounded-2xl focus:border-indigo-500 dark:focus:border-indigo-500 focus:outline-none mb-6 text-white dark:text-white light:text-slate-900 transition-colors">
-                <button onclick="checkAnswer()" class="btn-tap-effect w-full bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 py-5 rounded-2xl font-bold text-white shadow-lg min-h-[60px] uppercase text-xs tracking-wider flex items-center justify-center">
-                    Submit Response
-                </button>
-            </div>
+                    <!-- Sequence or State Banner inside the circle -->
+                    <div class="z-10 text-center px-2 w-full flex flex-col justify-center items-center">
+                        <div id="number-display" class="digit-hero text-center break-all select-all py-0.5">READY</div>
+                        <p id="timer-status" class="text-xs text-slate-400 dark:text-slate-400 light:text-slate-500 font-semibold mt-0.5">Press start to begin</p>
+                    </div>
+                </div>
 
-            <!-- Intermediate Result Evaluation Screen -->
-            <div id="result-screen" class="hidden fade-in">
-                <div id="result-status" class="text-base font-bold uppercase mb-4"></div>
-                <div id="result-msg" class="text-sm text-slate-400 dark:text-slate-400 light:text-slate-600 mb-8 leading-relaxed"></div>
-                <button id="next-btn" onclick="nextRound()" class="btn-tap-effect w-full bg-slate-800 dark:bg-slate-800 light:bg-slate-200 light:text-slate-800 hover:bg-slate-750 py-5 rounded-2xl font-bold text-white min-h-[60px] flex items-center justify-center">
-                    Next Round
-                </button>
+                <!-- Interactive Answer Input Block (Shown during response phase) -->
+                <div id="input-block" class="hidden my-2 fade-in">
+                    <p class="text-xs font-semibold mb-1 text-slate-300 dark:text-slate-300 light:text-slate-700 uppercase tracking-wider">Type the memorized sequence</p>
+                    <input type="number" pattern="\d*" inputmode="numeric" id="user-input" autocomplete="off" placeholder="•••••••"
+                        class="w-full text-center font-bold py-2.5 bg-slate-800/40 dark:bg-slate-800/40 light:bg-slate-50 border border-slate-700/60 dark:border-slate-700/60 light:border-slate-300 rounded-2xl focus:border-indigo-500 dark:focus:border-indigo-500 focus:outline-none text-white dark:text-white light:text-slate-900 transition-colors">
+                </div>
+
+                <!-- Round Result Message Block (Shown between rounds) -->
+                <div id="result-block" class="hidden my-2 fade-in">
+                    <div id="result-status" class="text-sm font-bold uppercase mb-0.5"></div>
+                    <div id="result-msg" class="text-xs text-slate-400 dark:text-slate-400 light:text-slate-600 leading-relaxed"></div>
+                </div>
+
+                <!-- Main Action CTA Button -->
+                <div class="mt-2">
+                    <button id="primary-action-btn" onclick="handlePrimaryAction()" class="btn-tap-effect w-full bg-gradient-to-r from-indigo-500 to-indigo-600 hover:from-indigo-600 hover:to-indigo-700 active:from-indigo-700 active:to-indigo-800 py-2.5 min-h-[40px] rounded-2xl font-bold text-white shadow-lg shadow-indigo-500/25 uppercase text-xs tracking-widest flex items-center justify-center transition-all">
+                        Start Challenge
+                    </button>
+                </div>
             </div>
 
             <!-- End Challenge Summary Screen -->
             <div id="summary-screen" class="hidden fade-in">
-                <div class="text-indigo-400 text-4xl mb-3 animate-bounce">🏆</div>
-                <h2 class="text-2xl font-extrabold mb-1 bg-gradient-to-r from-white to-slate-300 dark:from-white dark:to-slate-300 light:from-slate-900 light:to-slate-700 bg-clip-text text-transparent">Challenge Completed</h2>
-                <p id="summary-date" class="text-[10px] text-slate-400 dark:text-slate-400 light:text-slate-500 uppercase font-extrabold mb-6 tracking-widest"></p>
+                <div class="text-indigo-500 dark:text-indigo-400 text-4xl mb-3 animate-bounce">🏆</div>
+                <h2 class="text-2xl font-extrabold mb-1 text-slate-900 dark:text-white">Challenge Completed</h2>
+                <p id="summary-date" class="text-[10px] text-slate-500 dark:text-slate-400 uppercase font-extrabold mb-6 tracking-widest"></p>
                 
                 <!-- Chunky Score blocks -->
                 <div class="grid grid-cols-2 gap-3 mb-6">
-                    <div class="bg-slate-800/30 dark:bg-slate-800/30 light:bg-slate-200/50 p-5 rounded-3xl border border-slate-700/50 dark:border-slate-700/50 light:border-slate-300">
-                        <div class="text-3xl font-extrabold text-emerald-500 light:text-emerald-700" id="final-correct">0</div>
-                        <div class="text-[11px] text-slate-400 dark:text-slate-400 light:text-slate-600 uppercase font-black tracking-wider mt-1">Correct</div>
+                    <div class="bg-slate-200/60 dark:bg-slate-800/30 p-5 rounded-3xl border border-slate-300 dark:border-slate-700/50">
+                        <div class="text-3xl font-extrabold text-emerald-600 dark:text-emerald-500" id="final-correct">0</div>
+                        <div class="text-[11px] text-slate-600 dark:text-slate-400 uppercase font-black tracking-wider mt-1">Correct</div>
                     </div>
-                    <div class="bg-slate-800/30 dark:bg-slate-800/30 light:bg-slate-200/50 p-5 rounded-3xl border border-slate-700/50 dark:border-slate-700/50 light:border-slate-300">
-                        <div class="text-3xl font-extrabold text-rose-500 light:text-rose-700" id="final-wrong">0</div>
-                        <div class="text-[11px] text-slate-400 dark:text-slate-400 light:text-slate-600 uppercase font-black tracking-wider mt-1">Wrong</div>
+                    <div class="bg-slate-200/60 dark:bg-slate-800/30 p-5 rounded-3xl border border-slate-300 dark:border-slate-700/50">
+                        <div class="text-3xl font-extrabold text-rose-600 dark:text-rose-500" id="final-wrong">0</div>
+                        <div class="text-[11px] text-slate-600 dark:text-slate-400 uppercase font-black tracking-wider mt-1">Wrong</div>
                     </div>
                 </div>
 
                 <!-- Dynamic Visual Encouragement Message Section -->
-                <div id="encouragement-box" class="mb-6 p-5 rounded-3xl text-left bg-gradient-to-br from-indigo-500/10 to-purple-500/10 border border-indigo-500/20 shadow-inner">
+                <div id="encouragement-box" class="mb-6 p-5 rounded-3xl text-left bg-indigo-500/10 border border-indigo-500/20 shadow-inner">
                     <div class="flex items-center gap-2 mb-2">
                         <span class="text-base">✨</span>
-                        <h4 class="text-xs font-black uppercase tracking-widest text-indigo-400 dark:text-indigo-300 light:text-indigo-700">Memory Coach Advice</h4>
+                        <h4 class="text-xs font-black uppercase tracking-widest text-indigo-700 dark:text-indigo-300">Memory Coach Advice</h4>
                     </div>
-                    <p id="encouragement-text" class="text-xs leading-relaxed text-slate-300 dark:text-slate-300 light:text-slate-800 font-medium"></p>
+                    <p id="encouragement-text" class="text-xs leading-relaxed text-slate-800 dark:text-slate-300 font-medium"></p>
                 </div>
 
                 <!-- Custom AI Brain Power Analyst (Gemini API Integration) -->
                 <div id="ai-analyst-panel" class="mb-6 p-5 rounded-3xl bg-indigo-500/5 border border-indigo-500/15 text-left relative overflow-hidden">
                     <div class="flex justify-between items-center mb-2">
-                        <div class="text-[10px] font-black tracking-widest text-indigo-400 dark:text-indigo-300 light:text-indigo-700 uppercase">AI Cognitive Diagnostic</div>
-                        <span class="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse"></span>
+                        <div class="text-[10px] font-black tracking-widest text-indigo-700 dark:text-indigo-300 uppercase">AI Cognitive Diagnostic</div>
+                        <span class="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse"></span>
                     </div>
                     <!-- Loading skeleton -->
                     <div id="ai-loading" class="space-y-2 py-1 animate-pulse">
-                        <div class="h-4 bg-slate-800 dark:bg-slate-800 light:bg-slate-200 rounded w-1/2"></div>
-                        <div class="h-4 bg-slate-800 dark:bg-slate-800 light:bg-slate-200 rounded w-5/6"></div>
-                        <div class="h-3.5 bg-slate-800 dark:bg-slate-800 light:bg-slate-200 rounded w-3/4"></div>
+                        <div class="h-4 bg-slate-300 dark:bg-slate-800 rounded w-1/2"></div>
+                        <div class="h-4 bg-slate-300 dark:bg-slate-800 rounded w-5/6"></div>
+                        <div class="h-3.5 bg-slate-300 dark:bg-slate-800 rounded w-3/4"></div>
                     </div>
                     <!-- Target element for AI Evaluation -->
                     <div id="ai-content" class="hidden">
-                        <h3 id="ai-brain-title" class="text-sm font-extrabold text-slate-100 dark:text-slate-100 light:text-slate-800 mb-1 leading-tight"></h3>
-                        <p id="ai-evaluation-text" class="text-[11px] leading-relaxed text-slate-400 dark:text-slate-400 light:text-slate-700"></p>
+                        <h3 id="ai-brain-title" class="text-sm font-extrabold text-slate-800 dark:text-slate-100 mb-1 leading-tight"></h3>
+                        <p id="ai-evaluation-text" class="text-[11px] leading-relaxed text-slate-700 dark:text-slate-400"></p>
                     </div>
                 </div>
 
@@ -350,10 +390,10 @@
                         <svg class="w-5.5 h-5.5 fill-current" viewBox="0 0 24 24"><path d="M12.031 6.172c-2.32 0-4.525.903-6.163 2.541-1.638 1.638-2.541 3.842-2.541 6.162 0 2.123.759 4.137 2.135 5.717l-1.396 5.097 5.223-1.371c1.503.82 3.197 1.254 4.919 1.254h.004c2.32 0 4.525-.903 6.163-2.541 1.638-1.638 2.541-3.842 2.541-6.162 0-2.32-.903-4.525-2.541-6.162-1.638-1.638-3.842-2.541-6.163-2.541zm5.286 11.75c-.218.614-1.282 1.154-1.782 1.22-.499.066-1.022.094-3.134-.78-2.697-1.118-4.444-3.86-4.579-4.039-.134-.179-1.096-1.455-1.096-2.777 0-1.322.692-1.97.942-2.233.25-.262.541-.328.72-.328.179 0 .359.001.517.009.166.008.388-.063.606.463.218.525.748 1.822.813 1.954.066.131.11.284.022.46-.088.176-.131.306-.262.46l-.394.46c-.131.153-.268.32-.116.58.152.26.677 1.114 1.45 1.804.994.888 1.832 1.163 2.094 1.293.262.131.415.109.57-.066.154-.175.66-.766.837-1.028.177-.262.354-.219.597-.131.243.087 1.547.731 1.812.863.266.131.442.197.508.306.066.11.066.634-.153 1.248z"/></svg>
                         Share via WhatsApp
                     </button>
-                    <button onclick="copyResults()" class="btn-tap-effect w-full bg-slate-700/50 dark:bg-slate-700/50 light:bg-slate-200 light:text-slate-800 border border-slate-600/50 dark:border-slate-600/50 light:border-slate-300 py-4 min-h-[60px] rounded-2xl font-bold text-white flex items-center justify-center gap-2.5 text-sm transition-all">
+                    <button onclick="copyResults()" class="btn-tap-effect w-full bg-slate-200 dark:bg-slate-700/50 text-slate-800 dark:text-white border border-slate-300 dark:border-slate-600/50 py-4 min-h-[60px] rounded-2xl font-bold flex items-center justify-center gap-2.5 text-sm transition-all">
                         Copy Result Text
                     </button>
-                    <button onclick="resetToHome()" class="btn-tap-effect w-full bg-slate-800/60 dark:bg-slate-800/60 light:bg-slate-300 light:text-slate-950 hover:bg-slate-800 transition-all py-4 min-h-[60px] rounded-2xl font-bold text-slate-400 dark:text-slate-400 light:text-slate-800 mt-2 flex items-center justify-center text-sm">
+                    <button onclick="resetToHome()" class="btn-tap-effect w-full bg-slate-300 dark:bg-slate-800/60 text-slate-900 dark:text-slate-400 hover:bg-slate-400 dark:hover:bg-slate-800 transition-all py-4 min-h-[60px] rounded-2xl font-bold mt-2 flex items-center justify-center text-sm">
                         New Game
                     </button>
                 </div>
@@ -361,45 +401,61 @@
         </div>
     </div>
 
+    <!-- Footer Matching Attachment -->
+    <footer class="w-full text-center py-1.5 text-xs font-semibold text-slate-500 dark:text-slate-400">
+        &copy; 2026 A Leong Games &bull; v1.0.0
+    </footer>
+
     <!-- Feedback Toast Notification -->
     <div id="toast" class="copy-toast">Copied to clipboard!</div>
 
     <script>
-        // API Configuration - injected safely
         const apiKey = "AQ.Ab8RN6LfcVqyMfwF9lkRTaS4rGxuyIK0PZSezsrYQNknIjXNBg"; 
         let config = { digits: 7, time: 10 };
         let stats = { correct: 0, wrong: 0, currentRound: 0 };
         const TOTAL_ROUNDS = 6;
         let currentNumber = "";
         let timer;
+        let gameState = "IDLE"; // IDLE, MEMORIZE, INPUT, RESULT
         let aiBrainTitleEvaluated = "";
         let aiEvaluationEvaluated = "";
+        let soundMuted = false;
 
-        // UI Theme Handler
+        // UI Theme Handler - Default Light Mode
         function toggleTheme() {
             const html = document.documentElement;
-            const isLight = html.classList.contains('light');
+            const isDark = html.classList.contains('dark');
             
-            if (isLight) {
-                html.classList.remove('light');
-                html.classList.add('dark');
-                document.getElementById('theme-sun').classList.remove('hidden');
-                document.getElementById('theme-moon').classList.add('hidden');
-            } else {
+            if (isDark) {
                 html.classList.remove('dark');
                 html.classList.add('light');
                 document.getElementById('theme-sun').classList.add('hidden');
                 document.getElementById('theme-moon').classList.remove('hidden');
+            } else {
+                html.classList.remove('light');
+                html.classList.add('dark');
+                document.getElementById('theme-sun').classList.remove('hidden');
+                document.getElementById('theme-moon').classList.add('hidden');
             }
         }
 
-        // Initialize default dark theme elements
-        window.onload = function() {
-            document.documentElement.classList.add('dark');
+        function toggleSound() {
+            soundMuted = !soundMuted;
+            document.getElementById('sound-icon-on').classList.toggle('hidden', soundMuted);
+            document.getElementById('sound-icon-off').classList.toggle('hidden', !soundMuted);
         }
 
-        // Setup Selection Toggles
+        window.onload = function() {
+            // Ensure Light Mode by default
+            document.documentElement.classList.remove('dark');
+            document.documentElement.classList.add('light');
+            document.getElementById('theme-sun').classList.add('hidden');
+            document.getElementById('theme-moon').classList.remove('hidden');
+            resetToHome();
+        }
+
         function setDigits(n) {
+            if (gameState !== "IDLE") return;
             config.digits = n;
             ['d7', 'd8', 'd9', 'd10'].forEach(id => {
                 const el = document.getElementById(id);
@@ -409,6 +465,7 @@
         }
 
         function setTime(s) {
+            if (gameState !== "IDLE") return;
             config.time = s;
             ['t10', 't15', 't20'].forEach(id => {
                 const el = document.getElementById(id);
@@ -417,11 +474,30 @@
             document.getElementById('t' + s).classList.add('active');
         }
 
-        // Gameplay Engine Operations
+        function handlePrimaryAction() {
+            if (gameState === "IDLE") {
+                startChallenge();
+            } else if (gameState === "INPUT") {
+                checkAnswer();
+            } else if (gameState === "RESULT") {
+                nextRound();
+            }
+        }
+
+        function setConfigInteractive(enabled) {
+            const panel = document.getElementById('config-panel');
+            if (enabled) {
+                panel.classList.remove('opacity-40', 'pointer-events-none');
+            } else {
+                panel.classList.add('opacity-40', 'pointer-events-none');
+            }
+        }
+
         function startChallenge() {
             stats.correct = 0;
             stats.wrong = 0;
             stats.currentRound = 0;
+            setConfigInteractive(false);
             updateHUD();
             nextRound();
         }
@@ -429,7 +505,7 @@
         function updateHUD() {
             document.getElementById('score-correct').innerText = stats.correct;
             document.getElementById('score-wrong').innerText = stats.wrong;
-            document.getElementById('round-indicator').innerText = `Round ${Math.min(stats.currentRound + 1, TOTAL_ROUNDS)}/${TOTAL_ROUNDS}`;
+            document.getElementById('round-indicator').innerText = `ROUND: ${Math.min(stats.currentRound + 1, TOTAL_ROUNDS)} / ${TOTAL_ROUNDS}`;
         }
 
         function generateUniqueSequence(len) {
@@ -451,39 +527,45 @@
                 showSummary();
                 return;
             }
+            gameState = "MEMORIZE";
             updateHUD();
+            
+            document.getElementById('input-block').classList.add('hidden');
+            document.getElementById('result-block').classList.add('hidden');
+            
+            const btn = document.getElementById('primary-action-btn');
+            btn.innerText = "MEMORIZING...";
+            btn.classList.add('pointer-events-none', 'opacity-60');
+
             currentNumber = generateUniqueSequence(config.digits);
             
-            // Adjust sequence text size to dynamically fit perfectly inside the countdown circle
             const displayEl = document.getElementById('number-display');
             displayEl.innerText = currentNumber;
             if (config.digits >= 10) {
-                displayEl.style.fontSize = '1.85rem';
-                displayEl.style.letterSpacing = '0.075rem';
-            } else if (config.digits >= 9) {
                 displayEl.style.fontSize = '2.1rem';
-                displayEl.style.letterSpacing = '0.125rem';
+                displayEl.style.letterSpacing = '0.02rem';
+            } else if (config.digits >= 9) {
+                displayEl.style.fontSize = '2.35rem';
+                displayEl.style.letterSpacing = '0.05rem';
             } else if (config.digits >= 8) {
-                displayEl.style.fontSize = '2.4rem';
-                displayEl.style.letterSpacing = '0.18rem';
+                displayEl.style.fontSize = '2.65rem';
+                displayEl.style.letterSpacing = '0.08rem';
             } else {
-                displayEl.style.fontSize = '2.75rem';
-                displayEl.style.letterSpacing = '0.25rem';
+                displayEl.style.fontSize = '3.0rem';
+                displayEl.style.letterSpacing = '0.12rem';
             }
 
-            show('memorize-screen');
-            
             let start = Date.now();
             let limit = config.time * 1000;
             
+            clearInterval(timer);
             timer = setInterval(() => {
                 let diff = Date.now() - start;
                 let rem = Math.max(0, limit - diff);
                 
-                // SVG Progress Circle stroke math (radius is 85, circumference ≈ 534)
                 let strokeOffset = 534 * (1 - (rem / limit));
                 document.getElementById('countdown-circle').setAttribute('stroke-dashoffset', strokeOffset);
-                document.getElementById('timer-text').innerText = Math.ceil(rem / 1000);
+                document.getElementById('timer-status').innerHTML = `<span class="text-indigo-600 dark:text-indigo-400 font-bold text-sm">${Math.ceil(rem / 1000)}s</span> remaining`;
                 
                 if (rem <= 0) {
                     clearInterval(timer);
@@ -493,7 +575,20 @@
         }
 
         function showInput() {
-            show('input-screen');
+            gameState = "INPUT";
+            
+            const displayEl = document.getElementById('number-display');
+            displayEl.innerText = "• • • •";
+            displayEl.style.fontSize = '2.75rem';
+            displayEl.style.letterSpacing = '0.15rem';
+            
+            document.getElementById('timer-status').innerText = "Enter the sequence below";
+            document.getElementById('input-block').classList.remove('hidden');
+            
+            const btn = document.getElementById('primary-action-btn');
+            btn.innerText = "SUBMIT RESPONSE";
+            btn.classList.remove('pointer-events-none', 'opacity-60');
+
             const inp = document.getElementById('user-input');
             inp.value = "";
             setTimeout(() => {
@@ -503,31 +598,31 @@
         }
 
         function checkAnswer() {
+            gameState = "RESULT";
             const val = document.getElementById('user-input').value;
             const status = document.getElementById('result-status');
             const msg = document.getElementById('result-msg');
-            const nextBtn = document.getElementById('next-btn');
+            const btn = document.getElementById('primary-action-btn');
             
-            show('result-screen');
+            document.getElementById('input-block').classList.add('hidden');
+            document.getElementById('result-block').classList.remove('hidden');
             
             if (val === currentNumber) {
                 stats.correct++;
                 status.innerText = "✓ Correct Answer";
-                status.className = "text-emerald-500 light:text-emerald-600 text-base font-bold uppercase mb-2";
-                msg.innerHTML = `You memorized <span class="text-indigo-500 light:text-indigo-600 font-extrabold tracking-widest">${currentNumber}</span> correctly.`;
+                status.className = "text-emerald-600 dark:text-emerald-500 text-sm font-extrabold uppercase mb-1";
+                msg.innerHTML = `Matched <span class="text-indigo-600 dark:text-indigo-400 font-extrabold tracking-widest">${currentNumber}</span>!`;
             } else {
                 stats.wrong++;
                 status.innerText = "✕ Misremembered";
-                status.className = "text-rose-500 light:text-rose-600 text-base font-bold uppercase mb-2";
-                msg.innerHTML = `Target sequence: <span class="text-white dark:text-white light:text-slate-900 font-extrabold tracking-widest">${currentNumber}</span><br>You entered: <span class="text-rose-500 light:text-rose-600 font-bold">${val || 'nothing'}</span>`;
+                status.className = "text-rose-600 dark:text-rose-500 text-sm font-extrabold uppercase mb-1";
+                msg.innerHTML = `Target sequence: <span class="text-slate-900 dark:text-white font-extrabold tracking-widest">${currentNumber}</span><br>You entered: <span class="text-rose-600 dark:text-rose-400 font-bold">${val || 'nothing'}</span>`;
             }
 
             if (stats.currentRound >= TOTAL_ROUNDS) {
-                nextBtn.innerText = "VIEW EVALUATION";
-                nextBtn.className = "btn-tap-effect w-full bg-indigo-600 hover:bg-indigo-700 py-5 rounded-2xl font-bold text-white shadow-lg uppercase text-sm tracking-widest min-h-[60px] flex items-center justify-center";
+                btn.innerText = "VIEW EVALUATION";
             } else {
-                nextBtn.innerText = "NEXT ROUND";
-                nextBtn.className = "btn-tap-effect w-full bg-slate-800 dark:bg-slate-800 light:bg-slate-200 light:text-slate-800 py-5 rounded-2xl font-bold text-white uppercase text-sm tracking-widest min-h-[60px] flex items-center justify-center";
+                btn.innerText = "NEXT ROUND";
             }
             
             updateHUD();
@@ -607,7 +702,6 @@
                 aiBrainTitleEvaluated = responseData.title;
                 aiEvaluationEvaluated = responseData.evaluation;
             } else {
-                // Fallback analysis evaluations
                 const scoreRatio = stats.correct / TOTAL_ROUNDS;
                 if (scoreRatio === 1) {
                     aiBrainTitleEvaluated = "Hyper-threaded Superchip";
@@ -626,11 +720,11 @@
         }
 
         function showSummary() {
-            show('summary-screen');
+            document.getElementById('game-workspace').classList.add('hidden');
+            document.getElementById('summary-screen').classList.remove('hidden');
             document.getElementById('final-correct').innerText = stats.correct;
             document.getElementById('final-wrong').innerText = stats.wrong;
             
-            // Present the encouragement message instantly
             document.getElementById('encouragement-text').innerText = getDynamicEncouragement(stats.correct);
 
             const now = new Date();
@@ -669,21 +763,31 @@
         }
 
         function resetToHome() {
+            clearInterval(timer);
+            gameState = "IDLE";
             stats.correct = 0;
             stats.wrong = 0;
             stats.currentRound = 0;
             updateHUD();
-            show('setup-screen');
-        }
-
-        function show(id) {
-            if (document.activeElement && document.activeElement.tagName === "INPUT") {
-                document.activeElement.blur();
-            }
-            ['setup-screen', 'memorize-screen', 'input-screen', 'result-screen', 'summary-screen'].forEach(s => {
-                document.getElementById(s).classList.add('hidden');
-            });
-            document.getElementById(id).classList.remove('hidden');
+            
+            document.getElementById('summary-screen').classList.add('hidden');
+            document.getElementById('game-workspace').classList.remove('hidden');
+            document.getElementById('input-block').classList.add('hidden');
+            document.getElementById('result-block').classList.add('hidden');
+            
+            setConfigInteractive(true);
+            
+            const displayEl = document.getElementById('number-display');
+            displayEl.innerText = "READY";
+            displayEl.style.fontSize = '3.0rem';
+            displayEl.style.letterSpacing = '0.12rem';
+            
+            document.getElementById('timer-status').innerText = "Press start to begin";
+            document.getElementById('countdown-circle').setAttribute('stroke-dashoffset', '0');
+            
+            const btn = document.getElementById('primary-action-btn');
+            btn.innerText = "START CHALLENGE";
+            btn.classList.remove('pointer-events-none', 'opacity-60');
         }
     </script>
 </body>
