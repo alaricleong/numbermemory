@@ -111,7 +111,7 @@
         }
 
         .digit-hero {
-            font-size: 3.84rem;
+            font-size: 4.5rem;
             font-weight: 800;
             letter-spacing: 0.15rem;
             font-variant-numeric: tabular-nums;
@@ -198,11 +198,11 @@
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col items-center justify-between pb-3">
+<body class="min-h-screen flex flex-col items-center justify-between py-0.5">
 
-    <div class="w-full max-w-[390px] px-4 pt-2 sm:pt-3">
+    <div class="w-full max-w-[390px] px-2.5 pt-0.5 pb-0 mb-0.5">
         <!-- Top Title Row & Action Buttons Header -->
-        <div class="flex justify-between items-start mb-2">
+        <div class="flex justify-between items-start mb-0.5">
             <!-- Brand Logo with PRO badge -->
             <div>
                 <div class="flex items-center gap-1.5">
@@ -213,7 +213,7 @@
                 </div>
                 
                 <!-- Circular Icon Controls (Sound + Theme) -->
-                <div class="flex items-center gap-2 mt-2">
+                <div class="flex items-center gap-2 mt-1.5">
                     <!-- Sound Toggle Button -->
                     <button onclick="toggleSound()" id="sound-btn" class="circle-icon-btn btn-tap-effect" aria-label="Toggle sound">
                         <svg id="sound-icon-on" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
@@ -248,7 +248,7 @@
         </div>
 
         <!-- Combined Status Row (Round Indicator & Accuracy Tracker on the same line) -->
-        <div class="flex items-center justify-between gap-2 mb-1.5">
+        <div class="flex items-center justify-between gap-2 mb-0.5">
             <!-- Round Indicator Pill -->
             <div class="inline-flex items-center gap-2 bg-indigo-500/15 dark:bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 font-black text-xs px-3 py-1 rounded-full border border-indigo-500/20 tracking-widest uppercase">
                 <span id="round-indicator">ROUND: 1 / 6</span>
@@ -269,16 +269,16 @@
         </div>
     </div>
 
-    <div class="app-container w-full max-w-[390px] px-2">
+    <div class="app-container w-full max-w-[390px] px-1.5 my-0">
         
-        <div class="glass-card rounded-3xl p-2.5 sm:p-3 text-center">
+        <div class="glass-card rounded-3xl p-1.5 sm:p-2 text-center">
             
             <!-- Main Game Workspace (Combines Config, Memorize Ring, and Input on One Screen) -->
             <div id="game-workspace" class="fade-in">
                 
                 <!-- Inline Configuration Bar (Number Length & Exposure Window) -->
-                <div id="config-panel" class="mb-2 transition-opacity duration-300">
-                    <div class="flex justify-between items-center mb-1 px-1">
+                <div id="config-panel" class="mb-0.5 transition-opacity duration-300">
+                    <div class="flex justify-between items-center mb-0.5 px-1">
                         <span class="text-[11px] text-slate-400 dark:text-slate-400 light:text-slate-500 uppercase font-extrabold tracking-widest">Length</span>
                         <span class="text-[11px] text-slate-400 dark:text-slate-400 light:text-slate-500 uppercase font-extrabold tracking-widest">Exposure</span>
                     </div>
@@ -294,15 +294,15 @@
                         
                         <!-- Exposure Window Selector -->
                         <div class="grid grid-cols-3 gap-1 bg-slate-800/40 dark:bg-slate-800/40 light:bg-slate-200/60 p-1 rounded-2xl border border-slate-700/50 light:border-slate-300">
+                            <button onclick="setTime(8)" id="t8" class="btn-select !min-h-[36px] !text-xs rounded-xl font-bold">8s</button>
                             <button onclick="setTime(10)" id="t10" class="btn-select active !min-h-[36px] !text-xs rounded-xl font-bold">10s</button>
-                            <button onclick="setTime(15)" id="t15" class="btn-select !min-h-[36px] !text-xs rounded-xl font-bold">15s</button>
-                            <button onclick="setTime(20)" id="t20" class="btn-select !min-h-[36px] !text-xs rounded-xl font-bold">20s</button>
+                            <button onclick="setTime(12)" id="t12" class="btn-select !min-h-[36px] !text-xs rounded-xl font-bold">12s</button>
                         </div>
                     </div>
                 </div>
 
                 <!-- Central Game Display Arena -->
-                <div class="relative w-[258px] h-[258px] sm:w-[288px] sm:h-[288px] mx-auto my-0.5 flex items-center justify-center">
+                <div class="relative w-[310px] h-[310px] sm:w-[340px] sm:h-[340px] mx-auto my-0 flex items-center justify-center">
                     <svg class="absolute top-0 left-0 w-full h-full transform -rotate-90" viewBox="0 0 200 200">
                         <!-- Background Circle Track -->
                         <circle class="text-slate-800/40 light:text-slate-300" stroke-width="8" stroke="currentColor" fill="transparent" r="85" cx="100" cy="100" />
@@ -311,27 +311,27 @@
                     </svg>
 
                     <!-- Sequence or State Banner inside the circle -->
-                    <div class="z-10 text-center px-2 w-full flex flex-col justify-center items-center">
-                        <div id="number-display" class="digit-hero text-center break-all select-all py-0.5">READY</div>
+                    <div class="z-10 text-center px-1 w-full flex flex-col justify-center items-center">
+                        <div id="number-display" class="digit-hero text-center break-all select-all py-0">READY</div>
                         <p id="timer-status" class="text-xs text-slate-400 dark:text-slate-400 light:text-slate-500 font-semibold mt-0.5">Press start to begin</p>
                     </div>
                 </div>
 
                 <!-- Interactive Answer Input Block (Shown during response phase) -->
-                <div id="input-block" class="hidden my-2 fade-in">
+                <div id="input-block" class="hidden my-1 fade-in">
                     <p class="text-xs font-semibold mb-1 text-slate-300 dark:text-slate-300 light:text-slate-700 uppercase tracking-wider">Type the memorized sequence</p>
                     <input type="number" pattern="\d*" inputmode="numeric" id="user-input" autocomplete="off" placeholder="•••••••"
-                        class="w-full text-center font-bold py-2.5 bg-slate-800/40 dark:bg-slate-800/40 light:bg-slate-50 border border-slate-700/60 dark:border-slate-700/60 light:border-slate-300 rounded-2xl focus:border-indigo-500 dark:focus:border-indigo-500 focus:outline-none text-white dark:text-white light:text-slate-900 transition-colors">
+                        class="w-full text-center font-bold py-2 bg-slate-800/40 dark:bg-slate-800/40 light:bg-slate-50 border border-slate-700/60 dark:border-slate-700/60 light:border-slate-300 rounded-2xl focus:border-indigo-500 dark:focus:border-indigo-500 focus:outline-none text-white dark:text-white light:text-slate-900 transition-colors">
                 </div>
 
                 <!-- Round Result Message Block (Shown between rounds) -->
-                <div id="result-block" class="hidden my-2 fade-in">
+                <div id="result-block" class="hidden my-1 fade-in">
                     <div id="result-status" class="text-sm font-bold uppercase mb-0.5"></div>
                     <div id="result-msg" class="text-xs text-slate-400 dark:text-slate-400 light:text-slate-600 leading-relaxed"></div>
                 </div>
 
                 <!-- Main Action CTA Button -->
-                <div class="mt-2">
+                <div class="mt-1">
                     <button id="primary-action-btn" onclick="handlePrimaryAction()" class="btn-tap-effect w-full bg-gradient-to-r from-indigo-500 to-indigo-600 hover:from-indigo-600 hover:to-indigo-700 active:from-indigo-700 active:to-indigo-800 py-2.5 min-h-[40px] rounded-2xl font-bold text-white shadow-lg shadow-indigo-500/25 uppercase text-xs tracking-widest flex items-center justify-center transition-all">
                         Start Challenge
                     </button>
@@ -402,7 +402,7 @@
     </div>
 
     <!-- Footer Matching Attachment -->
-    <footer class="w-full text-center py-1.5 text-xs font-semibold text-slate-500 dark:text-slate-400">
+    <footer class="w-full text-center py-0.5 text-xs font-semibold text-slate-500 dark:text-slate-400">
         &copy; 2026 A Leong Games &bull; v1.0.0
     </footer>
 
@@ -467,7 +467,7 @@
         function setTime(s) {
             if (gameState !== "IDLE") return;
             config.time = s;
-            ['t10', 't15', 't20'].forEach(id => {
+            ['t8', 't10', 't12'].forEach(id => {
                 const el = document.getElementById(id);
                 if (el) el.classList.remove('active');
             });
@@ -542,17 +542,17 @@
             const displayEl = document.getElementById('number-display');
             displayEl.innerText = currentNumber;
             if (config.digits >= 10) {
-                displayEl.style.fontSize = '2.1rem';
-                displayEl.style.letterSpacing = '0.02rem';
+                displayEl.style.fontSize = '2.8rem';
+                displayEl.style.letterSpacing = '0.01rem';
             } else if (config.digits >= 9) {
-                displayEl.style.fontSize = '2.35rem';
-                displayEl.style.letterSpacing = '0.05rem';
+                displayEl.style.fontSize = '3.2rem';
+                displayEl.style.letterSpacing = '0.03rem';
             } else if (config.digits >= 8) {
-                displayEl.style.fontSize = '2.65rem';
-                displayEl.style.letterSpacing = '0.08rem';
+                displayEl.style.fontSize = '3.6rem';
+                displayEl.style.letterSpacing = '0.05rem';
             } else {
-                displayEl.style.fontSize = '3.0rem';
-                displayEl.style.letterSpacing = '0.12rem';
+                displayEl.style.fontSize = '4.2rem';
+                displayEl.style.letterSpacing = '0.08rem';
             }
 
             let start = Date.now();
@@ -579,7 +579,7 @@
             
             const displayEl = document.getElementById('number-display');
             displayEl.innerText = "• • • •";
-            displayEl.style.fontSize = '2.75rem';
+            displayEl.style.fontSize = '3.8rem';
             displayEl.style.letterSpacing = '0.15rem';
             
             document.getElementById('timer-status').innerText = "Enter the sequence below";
@@ -779,7 +779,7 @@
             
             const displayEl = document.getElementById('number-display');
             displayEl.innerText = "READY";
-            displayEl.style.fontSize = '3.0rem';
+            displayEl.style.fontSize = '4.2rem';
             displayEl.style.letterSpacing = '0.12rem';
             
             document.getElementById('timer-status').innerText = "Press start to begin";
