@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" class="light">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Digit Dash - Memory Challenge</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digit Dash</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -11,109 +12,70 @@
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['Outfit', 'sans-serif'],
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['monospace']
                     }
                 }
             }
         }
     </script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap');
         
         body {
-            transition: background-color 0.4s ease, color 0.4s ease;
-            -webkit-user-select: none;
+            font-family: 'Inter', sans-serif;
             user-select: none;
-        }
-
-        /* Default Light Mode */
-        html.light body {
-            background-color: #f0f4f9;
-            color: #0f172a;
-        }
-
-        /* Dark Mode overrides */
-        html.dark body {
-            background-color: #0b0f19;
-            color: #f1f5f9;
+            -webkit-user-select: none;
+            touch-action: manipulation;
         }
 
         .glass-card {
-            background: rgba(255, 255, 255, 0.95);
-            border: 1px solid rgba(15, 23, 42, 0.08);
-            box-shadow: 0 20px 40px -15px rgba(15, 23, 42, 0.08);
-            transition: background-color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
         }
 
         html.dark .glass-card {
-            background: rgba(30, 41, 59, 0.7);
+            background: rgba(15, 23, 42, 0.85);
             backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.45);
-        }
-
-        /* Maximized, chunky touch button targets */
-        .btn-select {
-            background: rgba(15, 23, 42, 0.05);
-            border: 2px solid rgba(15, 23, 42, 0.12);
-            color: #1e293b;
-            transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-            -webkit-tap-highlight-color: transparent;
-            cursor: pointer;
-            min-height: 40px;
-            font-size: 0.875rem;
-        }
-
-        html.dark .btn-select {
-            background: rgba(255, 255, 255, 0.04);
-            border: 2px solid rgba(255, 255, 255, 0.08);
-            color: #e2e8f0;
-        }
-
-        .btn-select:hover:not(.active) {
-            background: rgba(15, 23, 42, 0.08);
-            border-color: rgba(15, 23, 42, 0.25);
-            transform: translateY(-1px);
-        }
-
-        html.dark .btn-select:hover:not(.active) {
-            background: rgba(255, 255, 255, 0.08);
-            border-color: rgba(255, 255, 255, 0.2);
-        }
-
-        .btn-select.active {
-            background: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%);
-            border-color: #4f46e5;
-            box-shadow: 0 6px 18px rgba(79, 70, 229, 0.35);
-            color: #ffffff !important;
-            transform: scale(1.03);
-        }
-
-        html.dark .btn-select.active {
-            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
-            border-color: #818cf8;
-            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.45), inset 0 2px 4px rgba(255, 255, 255, 0.2);
-        }
-
-        .btn-select:active {
-            transform: scale(0.95);
+            border: 1px solid rgba(51, 65, 85, 0.6);
+            box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.5);
         }
 
         .btn-tap-effect {
-            transition: transform 0.1s ease, filter 0.1s ease;
-            -webkit-tap-highlight-color: transparent;
+            transition: transform 0.1s ease, filter 0.2s ease;
         }
-
         .btn-tap-effect:active {
             transform: scale(0.96);
-            filter: brightness(0.95);
+        }
+
+        .btn-select {
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            background: rgba(241, 245, 249, 0.9);
+            color: #475569;
+            border: 1.5px solid #cbd5e1;
+            padding: 0.35rem 0.2rem;
+            font-size: 0.75rem;
+        }
+
+        html.dark .btn-select {
+            background: rgba(30, 41, 59, 0.8);
+            color: #94a3b8;
+            border: 1.5px solid #334155;
+        }
+
+        .btn-select.active {
+            background: #6366f1 !important;
+            color: #ffffff !important;
+            border-color: #4f46e5 !important;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
         }
 
         .digit-hero {
-            font-size: 4.8rem;
+            font-size: 3.8rem;
             font-weight: 800;
-            letter-spacing: 0.15rem;
+            letter-spacing: 0.1rem;
             font-variant-numeric: tabular-nums;
             background: linear-gradient(135deg, #4f46e5 0%, #312e81 100%);
             -webkit-background-clip: text;
@@ -128,16 +90,16 @@
         }
 
         .fade-in {
-            animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(12px); }
+            from { opacity: 0; transform: translateY(8px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
         input[type="number"] {
-            font-size: 28px !important;
+            font-size: 24px !important;
         }
 
         input::-webkit-outer-spin-button,
@@ -148,16 +110,16 @@
 
         .copy-toast {
             position: fixed;
-            bottom: 2.5rem;
+            bottom: 2rem;
             left: 50%;
             transform: translateX(-50%) translateY(10px);
             background: #10b981;
-            padding: 1rem 2rem;
-            border-radius: 1.25rem;
-            font-size: 0.95rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 1rem;
+            font-size: 0.875rem;
             font-weight: 700;
             opacity: 0;
-            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.4);
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4);
             transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             pointer-events: none;
             z-index: 100;
@@ -168,10 +130,9 @@
             transform: translateX(-50%) translateY(0);
         }
 
-        /* Circular icon button style matching attachment */
         .circle-icon-btn {
-            width: 42px;
-            height: 42px;
+            width: 38px;
+            height: 38px;
             border-radius: 50%;
             display: inline-flex;
             align-items: center;
@@ -198,15 +159,15 @@
         }
     </style>
 </head>
-<body class="min-h-screen max-h-[820px] flex flex-col items-center justify-start pt-1 pb-0 px-2 gap-0 overflow-x-hidden max-w-[402px] mx-auto">
+<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 min-h-screen flex flex-col items-center justify-start py-1 px-2 gap-0 overflow-x-hidden max-w-[402px] max-h-[820px] mx-auto">
 
-    <div class="w-full px-2 pt-0 pb-0 my-0 flex-shrink-0">
+    <div class="w-full px-1 pt-0.5 pb-0 my-0 flex-shrink-0">
         <!-- Top Title Row & Action Buttons Header -->
-        <div class="flex justify-between items-start mb-0">
+        <div class="flex justify-between items-start mb-0.5">
             <!-- Brand Logo with PRO badge -->
             <div>
                 <div class="flex items-center gap-1.5">
-                    <h1 class="text-2xl font-black tracking-tight text-slate-900 dark:text-white uppercase leading-none">
+                    <h1 class="text-xl font-black tracking-tight text-slate-900 dark:text-white uppercase leading-none">
                         DIGIT <span class="text-indigo-600 dark:text-indigo-400">DASH</span>
                     </h1>
                     <span class="bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 text-[10px] font-black px-1.5 py-0.5 rounded-md tracking-wider uppercase">PRO</span>
@@ -214,580 +175,497 @@
                 
                 <!-- Circular Icon Controls (Sound + Theme) -->
                 <div class="flex items-center gap-2 mt-1">
-                    <!-- Sound Toggle Button -->
                     <button onclick="toggleSound()" id="sound-btn" class="circle-icon-btn btn-tap-effect" aria-label="Toggle sound">
-                        <svg id="sound-icon-on" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <svg id="sound-icon-on" class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM14.657 2.929a1 1 0 011.414 0A9.972 9.972 0 0119 10a9.972 9.972 0 01-2.929 7.071 1 1 0 01-1.414-1.414A7.971 7.971 0 0017 10c0-2.21-.894-4.208-2.343-5.657a1 1 0 010-1.414zm-2.829 2.828a1 1 0 011.414 0A5.983 5.983 0 0115 10a5.983 5.983 0 01-1.757 4.243 1 1 0 01-1.414-1.414A3.983 3.983 0 0013 10a3.983 3.983 0 00-1.172-2.828 1 1 0 010-1.414z" clip-rule="evenodd"></path>
                         </svg>
-                        <svg id="sound-icon-off" class="w-5 h-5 hidden" fill="currentColor" viewBox="0 0 20 20">
+                        <svg id="sound-icon-off" class="w-4 h-4 hidden" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM12.293 7.293a1 1 0 011.414 0L15 8.586l1.293-1.293a1 1 0 111.414 1.414L16.414 10l1.293 1.293a1 1 0 01-1.414 1.414L15 11.414l-1.293 1.293a1 1 0 01-1.414-1.414L13.586 10l-1.293-1.293a1 1 0 010-1.414z" clip-rule="evenodd"></path>
                         </svg>
                     </button>
 
-                    <!-- Proper Light/Dark Theme Toggle Button -->
                     <button onclick="toggleTheme()" class="circle-icon-btn btn-tap-effect" aria-label="Toggle theme">
-                        <!-- Sun Icon (shows in Dark Mode to switch to Light) -->
-                        <svg id="theme-sun" class="w-5 h-5 hidden" fill="currentColor" viewBox="0 0 20 20">
+                        <svg id="theme-sun" class="w-4 h-4 hidden" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 17.95a1 1 0 01-1.414-1.414l.707-.707a1 1 0 111.414 1.414l-.707.707zm1.414-10.607a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 1.414l-.707.707zM3 11a1 1 0 100-2H2a1 1 0 100 2h1z" clip-rule="evenodd"></path>
                         </svg>
-                        <!-- Moon Icon (shows in Light Mode to switch to Dark) -->
-                        <svg id="theme-moon" class="w-5 h-5 block" fill="currentColor" viewBox="0 0 20 20">
+                        <svg id="theme-moon" class="w-4 h-4 block" fill="currentColor" viewBox="0 0 20 20">
                             <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
                         </svg>
                     </button>
                 </div>
             </div>
 
-            <!-- Top Right Action (Reset / Give Up) -->
-            <div class="flex flex-col items-end gap-2">
-                <button onclick="resetToHome()" class="btn-tap-effect bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 font-extrabold text-xs px-3.5 py-2.5 rounded-2xl flex items-center gap-1.5 border border-rose-500/20">
+            <!-- Top Right Action (Reset) -->
+            <div class="flex flex-col items-end gap-1">
+                <button onclick="resetToHome()" class="btn-tap-effect bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 font-extrabold text-[11px] px-3 py-1.5 rounded-xl flex items-center gap-1 border border-rose-500/20">
                     <span>🏁</span>
                     <span class="tracking-wider uppercase">RESET</span>
                 </button>
             </div>
         </div>
 
-        <!-- Combined Status Row (Round Indicator & Accuracy Tracker on the same line) -->
-        <div class="flex items-center justify-between gap-2 mt-0.5 mb-0">
-            <!-- Round Indicator Pill -->
-            <div class="inline-flex items-center gap-2 bg-indigo-500/15 dark:bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 font-black text-xs px-3 py-1 rounded-full border border-indigo-500/20 tracking-widest uppercase">
+        <!-- Combined Status Row -->
+        <div class="flex items-center justify-between gap-2 mt-0.5 mb-0.5">
+            <div class="inline-flex items-center gap-1.5 bg-indigo-500/15 dark:bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 font-black text-[11px] px-2.5 py-0.5 rounded-full border border-indigo-500/20 tracking-widest uppercase">
                 <span id="round-indicator">ROUND: 1 / 6</span>
             </div>
 
-            <!-- Accuracy Tracker Scores -->
             <div class="flex items-center gap-2">
                 <span class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider hidden sm:inline">Accuracy</span>
-                <div class="flex items-center gap-1.5 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 px-2.5 py-1 rounded-full border border-emerald-500/20 text-xs">
-                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <div class="flex items-center gap-1 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 px-2 py-0.5 rounded-full border border-emerald-500/20 text-[11px]">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
                     <span id="score-correct" class="font-black">0</span>
                 </div>
-                <div class="flex items-center gap-1.5 bg-rose-500/10 text-rose-700 dark:text-rose-400 px-2.5 py-1 rounded-full border border-rose-500/20 text-xs">
-                    <span class="w-2 h-2 rounded-full bg-rose-500"></span>
+                <div class="flex items-center gap-1 bg-rose-500/10 text-rose-700 dark:text-rose-400 px-2 py-0.5 rounded-full border border-rose-500/20 text-[11px]">
+                    <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
                     <span id="score-wrong" class="font-black">0</span>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="app-container w-full px-1 my-0 flex-1 flex flex-col justify-start">
-        
-        <div class="glass-card rounded-3xl p-2 pb-0 sm:p-3 sm:pb-0 text-center flex-1 flex flex-col justify-between max-h-[715px]">
+    <div class="app-container w-full px-0.5 my-0 flex-1 flex flex-col justify-start">
+        <div class="glass-card rounded-3xl p-1.5 pb-0 text-center flex-1 flex flex-col justify-start max-h-[725px]">
             
-            <!-- Main Game Workspace (Combines Config, Memorize Ring, and Input on One Screen) -->
-            <div id="game-workspace" class="fade-in flex-1 flex flex-col justify-start gap-0">
+            <!-- Main Game Workspace -->
+            <div id="game-workspace" class="fade-in flex-1 flex flex-col items-center justify-start gap-0 my-0 py-0">
                 
-                <!-- Inline Configuration Bar (Number Length & Exposure Window) -->
-                <div id="config-panel" class="mb-0 transition-opacity duration-300">
-                    <div class="flex justify-between items-center mb-0 px-1">
-                        <span class="text-[11px] text-slate-400 dark:text-slate-400 light:text-slate-500 uppercase font-extrabold tracking-widest">Length</span>
-                        <span class="text-[11px] text-slate-400 dark:text-slate-400 light:text-slate-500 uppercase font-extrabold tracking-widest">Exposure</span>
-                    </div>
-                    
-                    <div class="grid grid-cols-2 gap-1.5 mb-0">
-                        <!-- Number Length Selector -->
-                        <div class="grid grid-cols-4 gap-1 bg-slate-800/40 dark:bg-slate-800/40 light:bg-slate-200/60 p-1 rounded-2xl border border-slate-700/50 light:border-slate-300">
-                            <button onclick="setDigits(7)" id="d7" class="btn-select active !min-h-[36px] !text-xs rounded-xl font-bold">7</button>
-                            <button onclick="setDigits(8)" id="d8" class="btn-select !min-h-[36px] !text-xs rounded-xl font-bold">8</button>
-                            <button onclick="setDigits(9)" id="d9" class="btn-select !min-h-[36px] !text-xs rounded-xl font-bold">9</button>
-                            <button onclick="setDigits(10)" id="d10" class="btn-select !min-h-[36px] !text-xs rounded-xl font-bold">10</button>
+                <!-- Game Settings Bar -->
+                <div id="config-bar" class="w-full flex flex-col gap-1 mb-0 flex-shrink-0">
+                    <!-- Sequence Length Selector -->
+                    <div>
+                        <div class="flex justify-between items-center mb-0.5 px-1">
+                            <label class="text-[10px] font-extrabold uppercase tracking-widest text-slate-500 dark:text-slate-400">Sequence Length</label>
+                            <span id="length-badge" class="text-[10px] font-black text-indigo-600 dark:text-indigo-400">7 Digits</span>
                         </div>
-                        
-                        <!-- Exposure Window Selector -->
-                        <div class="grid grid-cols-3 gap-1 bg-slate-800/40 dark:bg-slate-800/40 light:bg-slate-200/60 p-1 rounded-2xl border border-slate-700/50 light:border-slate-300">
-                            <button onclick="setTime(8)" id="t8" class="btn-select !min-h-[36px] !text-xs rounded-xl font-bold">8s</button>
-                            <button onclick="setTime(10)" id="t10" class="btn-select active !min-h-[36px] !text-xs rounded-xl font-bold">10s</button>
-                            <button onclick="setTime(12)" id="t12" class="btn-select !min-h-[36px] !text-xs rounded-xl font-bold">12s</button>
+                        <div class="grid grid-cols-4 gap-1">
+                            <button onclick="setLength(7)" id="len-7" class="btn-select rounded-xl active font-bold">7</button>
+                            <button onclick="setLength(8)" id="len-8" class="btn-select rounded-xl font-bold">8</button>
+                            <button onclick="setLength(9)" id="len-9" class="btn-select rounded-xl font-bold">9</button>
+                            <button onclick="setLength(10)" id="len-10" class="btn-select rounded-xl font-bold">10</button>
+                        </div>
+                    </div>
+
+                    <!-- Exposure Window Selector -->
+                    <div>
+                        <div class="flex justify-between items-center mb-0.5 px-1">
+                            <label class="text-[10px] font-extrabold uppercase tracking-widest text-slate-500 dark:text-slate-400">Exposure Window</label>
+                            <span id="exposure-badge" class="text-[10px] font-black text-indigo-600 dark:text-indigo-400">8.0s</span>
+                        </div>
+                        <div class="grid grid-cols-3 gap-1">
+                            <button onclick="setExposure(8)" id="exp-8" class="btn-select rounded-xl active font-bold">8s</button>
+                            <button onclick="setExposure(10)" id="exp-10" class="btn-select rounded-xl font-bold">10s</button>
+                            <button onclick="setExposure(12)" id="exp-12" class="btn-select rounded-xl font-bold">12s</button>
                         </div>
                     </div>
                 </div>
 
-                <!-- Central Game Display Arena -->
-                <div class="relative w-[380px] h-[380px] mx-auto my-0 flex items-center justify-center max-w-full">
-                    <svg class="absolute top-0 left-0 w-full h-full transform -rotate-90" viewBox="0 0 200 200">
-                        <!-- Background Circle Track -->
-                        <circle class="text-slate-800/15 light:text-slate-300/40" stroke-width="8" stroke="currentColor" fill="transparent" r="85" cx="100" cy="100" />
-                        <!-- Active Shrinking SVG Progress Circle (Translucent Purple/Indigo for high clarity) -->
-                        <circle id="countdown-circle" class="text-indigo-500/50 dark:text-indigo-400/50 transition-all duration-75 ease-linear" stroke-width="8" stroke-dasharray="534" stroke-dashoffset="0" stroke-linecap="round" stroke="currentColor" fill="transparent" r="85" cx="100" cy="100" />
+                <!-- Central 380px Countdown Ring Arena -->
+                <div id="ring-container" class="relative w-[380px] h-[380px] max-w-full my-0 py-0 flex items-center justify-center flex-shrink-0">
+                    <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                        <!-- Background circle -->
+                        <circle class="text-slate-200/80 dark:text-slate-700/30" stroke-width="4.5" stroke="currentColor" fill="transparent" r="44" cx="50" cy="50"/>
+                        <!-- Translucent purple countdown ring stroke for maximum number legibility -->
+                        <circle id="timer-progress" class="text-indigo-500/30 dark:text-indigo-400/30 transition-all duration-100 ease-linear" stroke-width="4.5" stroke-dasharray="276.46" stroke-dashoffset="0" stroke-linecap="round" stroke="currentColor" fill="transparent" r="44" cx="50" cy="50"/>
                     </svg>
-
-                    <!-- Sequence or State Banner inside the circle -->
-                    <div class="z-10 text-center px-1 w-full flex flex-col justify-center items-center drop-shadow-sm">
-                        <div id="number-display" class="digit-hero text-center break-all select-all py-0">READY</div>
-                        <p id="timer-status" class="text-xs text-slate-400 dark:text-slate-400 light:text-slate-500 font-semibold mt-0.5">Press start to begin</p>
+                    
+                    <!-- Number Display Inside Central Circle -->
+                    <div class="absolute inset-0 flex items-center justify-center px-1">
+                        <span id="digit-display" class="digit-hero select-none font-bold text-center leading-none tracking-wider text-slate-900 dark:text-white drop-shadow-md">7394812</span>
                     </div>
                 </div>
 
-                <!-- Interactive Answer Input Block (Shown during response phase) -->
-                <div id="input-block" class="hidden my-0 fade-in">
-                    <p class="text-xs font-semibold mb-0.5 text-slate-300 dark:text-slate-300 light:text-slate-700 uppercase tracking-wider">Type the memorized sequence</p>
-                    <input type="number" pattern="\d*" inputmode="numeric" id="user-input" autocomplete="off" placeholder="•••••••"
-                        class="w-full text-center font-bold py-2 bg-slate-800/40 dark:bg-slate-800/40 light:bg-slate-50 border border-slate-700/60 dark:border-slate-700/60 light:border-slate-300 rounded-2xl focus:border-indigo-500 dark:focus:border-indigo-500 focus:outline-none text-white dark:text-white light:text-slate-900 transition-colors">
+                <!-- Input Container (Active during recall phase) -->
+                <div id="input-container" class="w-full hidden flex-col items-center gap-1.5 my-0">
+                    <p class="text-xs font-bold text-slate-600 dark:text-slate-300">Enter the sequence you memorized:</p>
+                    <input type="number" id="user-input" inputmode="numeric" pattern="[0-9]*" placeholder="•••••••" class="w-full bg-slate-100 dark:bg-slate-800/90 border-2 border-indigo-500/50 rounded-2xl py-2 px-3 text-center tracking-widest text-slate-900 dark:text-white font-mono focus:outline-none focus:ring-4 focus:ring-indigo-500/30 transition-all">
+                    <button onclick="submitAnswer()" class="w-full btn-tap-effect bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold py-2 rounded-2xl shadow-lg shadow-indigo-500/30 uppercase tracking-wider text-xs flex items-center justify-center gap-1.5">
+                        <span>SUBMIT ANSWER</span>
+                        <span>➔</span>
+                    </button>
                 </div>
 
-                <!-- Round Result Message Block (Shown between rounds) -->
-                <div id="result-block" class="hidden my-0 fade-in">
-                    <div id="result-status" class="text-sm font-bold uppercase mb-0.5"></div>
-                    <div id="result-msg" class="text-xs text-slate-400 dark:text-slate-400 light:text-slate-600 leading-relaxed"></div>
+                <!-- Feedback Display -->
+                <div id="feedback-container" class="w-full hidden flex-col items-center justify-center gap-1 my-0">
+                    <div id="feedback-badge" class="px-4 py-1 rounded-full text-xs font-black uppercase tracking-wider"></div>
+                    <div class="text-xs text-slate-500 dark:text-slate-400">
+                        Target: <span id="target-seq" class="font-mono font-bold text-slate-800 dark:text-slate-200"></span>
+                    </div>
+                    <div class="text-xs text-slate-500 dark:text-slate-400">
+                        Yours: <span id="your-seq" class="font-mono font-bold text-slate-800 dark:text-slate-200"></span>
+                    </div>
+                    <button onclick="nextRound()" class="btn-tap-effect bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 font-extrabold px-5 py-1.5 rounded-xl text-xs uppercase tracking-wider mt-1">
+                        Continue
+                    </button>
                 </div>
 
-                <!-- Main Action CTA Button -->
-                <div class="mt-0 mb-0">
-                    <button id="primary-action-btn" onclick="handlePrimaryAction()" class="btn-tap-effect w-full bg-gradient-to-r from-indigo-500 to-indigo-600 hover:from-indigo-600 hover:to-indigo-700 active:from-indigo-700 active:to-indigo-800 py-2.5 min-h-[40px] rounded-2xl font-bold text-white shadow-lg shadow-indigo-500/25 uppercase text-xs tracking-widest flex items-center justify-center transition-all">
-                        Start Challenge
+                <!-- Bottom Action Button Container -->
+                <div id="start-btn-container" class="w-full mt-0 mb-0 flex-shrink-0">
+                    <button onclick="startChallenge()" id="start-btn" class="w-full btn-tap-effect bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-500 hover:to-indigo-600 text-white font-black py-2.5 px-4 rounded-2xl shadow-lg shadow-indigo-600/30 border border-indigo-400/30 transition-all flex items-center justify-center gap-2 min-h-[40px]">
+                        <span class="text-base">⚡</span>
+                        <span class="tracking-wider uppercase text-xs sm:text-sm">START CHALLENGE</span>
+                    </button>
+                </div>
+
+            </div>
+
+            <!-- Diagnostic Summary View -->
+            <div id="summary-view" class="hidden fade-in flex-1 flex-col justify-between max-h-[660px]">
+                <div>
+                    <div class="text-3xl mb-1">🏆</div>
+                    <h2 class="text-xl font-black text-slate-900 dark:text-white uppercase tracking-tight">CHALLENGE COMPLETE</h2>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Here is your recall diagnostic summary</p>
+                    
+                    <div class="grid grid-cols-2 gap-2 my-2.5">
+                        <div class="bg-indigo-500/10 border border-indigo-500/20 p-2 rounded-2xl text-center">
+                            <span class="text-[10px] font-extrabold uppercase text-indigo-600 dark:text-indigo-400 tracking-wider">Overall Accuracy</span>
+                            <div id="summary-accuracy" class="text-xl font-black text-indigo-700 dark:text-indigo-300 mt-0.5">0%</div>
+                        </div>
+                        <div class="bg-indigo-500/10 border border-indigo-500/20 p-2 rounded-2xl text-center">
+                            <span class="text-[10px] font-extrabold uppercase text-indigo-600 dark:text-indigo-400 tracking-wider">Digits Memorized</span>
+                            <div id="summary-digits" class="text-2xl font-black text-indigo-700 dark:text-indigo-300 mt-0.5">0</div>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-100 dark:bg-slate-800/60 p-2 rounded-2xl text-left border border-slate-200 dark:border-slate-700/50">
+                        <span class="text-[10px] font-black uppercase tracking-wider text-slate-400 block mb-1">Session Logs</span>
+                        <div id="session-logs" class="space-y-1 text-xs max-h-32 overflow-y-auto pr-1"></div>
+                    </div>
+                </div>
+
+                <div class="flex gap-2 mt-2 mb-0">
+                    <button onclick="shareResults()" class="flex-1 btn-tap-effect bg-indigo-600 text-white font-extrabold py-2 rounded-2xl text-xs uppercase tracking-wider">
+                        📋 Copy Results
+                    </button>
+                    <button onclick="resetToHome()" class="flex-1 btn-tap-effect bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-slate-100 font-extrabold py-2 rounded-2xl text-xs uppercase tracking-wider">
+                        🔄 New Session
                     </button>
                 </div>
             </div>
 
-            <!-- End Challenge Summary Screen -->
-            <div id="summary-screen" class="hidden fade-in overflow-y-auto max-h-[660px] p-1 pb-2">
-                <div class="text-indigo-500 dark:text-indigo-400 text-4xl mb-3 animate-bounce">🏆</div>
-                <h2 class="text-2xl font-extrabold mb-1 text-slate-900 dark:text-white">Challenge Completed</h2>
-                <p id="summary-date" class="text-[10px] text-slate-500 dark:text-slate-400 uppercase font-extrabold mb-6 tracking-widest"></p>
-                
-                <!-- Chunky Score blocks -->
-                <div class="grid grid-cols-2 gap-3 mb-6">
-                    <div class="bg-slate-200/60 dark:bg-slate-800/30 p-5 rounded-3xl border border-slate-300 dark:border-slate-700/50">
-                        <div class="text-3xl font-extrabold text-emerald-600 dark:text-emerald-500" id="final-correct">0</div>
-                        <div class="text-[11px] text-slate-600 dark:text-slate-400 uppercase font-black tracking-wider mt-1">Correct</div>
-                    </div>
-                    <div class="bg-slate-200/60 dark:bg-slate-800/30 p-5 rounded-3xl border border-slate-300 dark:border-slate-700/50">
-                        <div class="text-3xl font-extrabold text-rose-600 dark:text-rose-500" id="final-wrong">0</div>
-                        <div class="text-[11px] text-slate-600 dark:text-slate-400 uppercase font-black tracking-wider mt-1">Wrong</div>
-                    </div>
-                </div>
-
-                <!-- Dynamic Visual Encouragement Message Section -->
-                <div id="encouragement-box" class="mb-6 p-5 rounded-3xl text-left bg-indigo-500/10 border border-indigo-500/20 shadow-inner">
-                    <div class="flex items-center gap-2 mb-2">
-                        <span class="text-base">✨</span>
-                        <h4 class="text-xs font-black uppercase tracking-widest text-indigo-700 dark:text-indigo-300">Memory Coach Advice</h4>
-                    </div>
-                    <p id="encouragement-text" class="text-xs leading-relaxed text-slate-800 dark:text-slate-300 font-medium"></p>
-                </div>
-
-                <!-- Custom AI Brain Power Analyst (Gemini API Integration) -->
-                <div id="ai-analyst-panel" class="mb-6 p-5 rounded-3xl bg-indigo-500/5 border border-indigo-500/15 text-left relative overflow-hidden">
-                    <div class="flex justify-between items-center mb-2">
-                        <div class="text-[10px] font-black tracking-widest text-indigo-700 dark:text-indigo-300 uppercase">AI Cognitive Diagnostic</div>
-                        <span class="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse"></span>
-                    </div>
-                    <!-- Loading skeleton -->
-                    <div id="ai-loading" class="space-y-2 py-1 animate-pulse">
-                        <div class="h-4 bg-slate-300 dark:bg-slate-800 rounded w-1/2"></div>
-                        <div class="h-4 bg-slate-300 dark:bg-slate-800 rounded w-5/6"></div>
-                        <div class="h-3.5 bg-slate-300 dark:bg-slate-800 rounded w-3/4"></div>
-                    </div>
-                    <!-- Target element for AI Evaluation -->
-                    <div id="ai-content" class="hidden">
-                        <h3 id="ai-brain-title" class="text-sm font-extrabold text-slate-800 dark:text-slate-100 mb-1 leading-tight"></h3>
-                        <p id="ai-evaluation-text" class="text-[11px] leading-relaxed text-slate-700 dark:text-slate-400"></p>
-                    </div>
-                </div>
-
-                <!-- Chunky Share Buttons with Expanded Spacing -->
-                <div class="flex flex-col gap-3">
-                    <button onclick="shareWhatsApp()" class="btn-tap-effect w-full bg-[#25D366] hover:bg-[#20ba59] active:bg-[#1a9446] py-4.5 min-h-[60px] rounded-2xl font-bold text-white shadow-md flex items-center justify-center gap-2.5 text-sm transition-all duration-150">
-                        <svg class="w-5.5 h-5.5 fill-current" viewBox="0 0 24 24"><path d="M12.031 6.172c-2.32 0-4.525.903-6.163 2.541-1.638 1.638-2.541 3.842-2.541 6.162 0 2.123.759 4.137 2.135 5.717l-1.396 5.097 5.223-1.371c1.503.82 3.197 1.254 4.919 1.254h.004c2.32 0 4.525-.903 6.163-2.541 1.638-1.638 2.541-3.842 2.541-6.162 0-2.32-.903-4.525-2.541-6.162-1.638-1.638-3.842-2.541-6.163-2.541zm5.286 11.75c-.218.614-1.282 1.154-1.782 1.22-.499.066-1.022.094-3.134-.78-2.697-1.118-4.444-3.86-4.579-4.039-.134-.179-1.096-1.455-1.096-2.777 0-1.322.692-1.97.942-2.233.25-.262.541-.328.72-.328.179 0 .359.001.517.009.166.008.388-.063.606.463.218.525.748 1.822.813 1.954.066.131.11.284.022.46-.088.176-.131.306-.262.46l-.394.46c-.131.153-.268.32-.116.58.152.26.677 1.114 1.45 1.804.994.888 1.832 1.163 2.094 1.293.262.131.415.109.57-.066.154-.175.66-.766.837-1.028.177-.262.354-.219.597-.131.243.087 1.547.731 1.812.863.266.131.442.197.508.306.066.11.066.634-.153 1.248z"/></svg>
-                        Share via WhatsApp
-                    </button>
-                    <button onclick="copyResults()" class="btn-tap-effect w-full bg-slate-200 dark:bg-slate-700/50 text-slate-800 dark:text-white border border-slate-300 dark:border-slate-600/50 py-4 min-h-[60px] rounded-2xl font-bold flex items-center justify-center gap-2.5 text-sm transition-all">
-                        Copy Result Text
-                    </button>
-                    <button onclick="resetToHome()" class="btn-tap-effect w-full bg-slate-300 dark:bg-slate-800/60 text-slate-900 dark:text-slate-400 hover:bg-slate-400 dark:hover:bg-slate-800 transition-all py-4 min-h-[60px] rounded-2xl font-bold mt-2 flex items-center justify-center text-sm">
-                        New Game
-                    </button>
-                </div>
-            </div>
         </div>
     </div>
 
-    <!-- Footer Matching Attachment -->
-    <footer class="w-full text-center pt-0.5 pb-0.5 text-xs font-semibold text-slate-500 dark:text-slate-400 flex-shrink-0">
-        &copy; 2026 A Leong Games &bull; v1.20.0
+    <!-- Footer -->
+    <footer class="w-full text-center py-0.5 my-0 flex-shrink-0">
+        <p class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">
+            DIGIT DASH PRO • v1.23.0
+        </p>
     </footer>
 
-    <!-- Feedback Toast Notification -->
-    <div id="toast" class="copy-toast">Copied to clipboard!</div>
+    <!-- Copy Toast Notification -->
+    <div id="copy-toast" class="copy-toast text-white">
+        Results copied to clipboard! 🚀
+    </div>
 
     <script>
-        const apiKey = "AQ.Ab8RN6LfcVqyMfwF9lkRTaS4rGxuyIK0PZSezsrYQNknIjXNBg"; 
-        let config = { digits: 7, time: 10 };
-        let stats = { correct: 0, wrong: 0, currentRound: 0 };
-        const TOTAL_ROUNDS = 6;
-        let currentNumber = "";
-        let timer;
-        let gameState = "IDLE"; // IDLE, MEMORIZE, INPUT, RESULT
-        let aiBrainTitleEvaluated = "";
-        let aiEvaluationEvaluated = "";
-        let soundMuted = false;
+        // Game State Variables
+        let seqLength = 7;
+        let exposureTime = 8;
+        let currentRound = 1;
+        const maxRounds = 6;
+        let correctCount = 0;
+        let wrongCount = 0;
+        let currentSequence = "";
+        let sessionLogs = [];
+        let timerInterval = null;
+        let soundEnabled = true;
 
-        // UI Theme Handler - Default Light Mode
+        // Audio Context initialization for sound effects
+        let audioCtx = null;
+
+        function getAudioContext() {
+            if (!audioCtx) {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (AudioContext) {
+                    audioCtx = new AudioContext();
+                }
+            }
+            if (audioCtx && audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            return audioCtx;
+        }
+
+        function playSound(type) {
+            if (!soundEnabled) return;
+            try {
+                const ctx = getAudioContext();
+                if (!ctx) return;
+                
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+
+                const now = ctx.currentTime;
+
+                if (type === 'tick') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(600, now);
+                    gain.gain.setValueAtTime(0.05, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+                    osc.start(now);
+                    osc.stop(now + 0.08);
+                } else if (type === 'correct') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(523.25, now);
+                    osc.frequency.setValueAtTime(659.25, now + 0.1);
+                    gain.gain.setValueAtTime(0.15, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+                    osc.start(now);
+                    osc.stop(now + 0.3);
+                } else if (type === 'wrong') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(220, now);
+                    osc.frequency.setValueAtTime(164.81, now + 0.12);
+                    gain.gain.setValueAtTime(0.15, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+                    osc.start(now);
+                    osc.stop(now + 0.35);
+                }
+            } catch (e) {
+                console.log("Audio error:", e);
+            }
+        }
+
+        // Font scaling depending on sequence length
+        function updateHeroFontSize() {
+            const heroEl = document.getElementById('digit-display');
+            if (seqLength === 7) heroEl.style.fontSize = '3.8rem';
+            else if (seqLength === 8) heroEl.style.fontSize = '3.4rem';
+            else if (seqLength === 9) heroEl.style.fontSize = '3.0rem';
+            else if (seqLength === 10) heroEl.style.fontSize = '2.7rem';
+        }
+
         function toggleTheme() {
             const html = document.documentElement;
-            const isDark = html.classList.contains('dark');
-            
-            if (isDark) {
-                html.classList.remove('dark');
-                html.classList.add('light');
-                document.getElementById('theme-sun').classList.add('hidden');
-                document.getElementById('theme-moon').classList.remove('hidden');
-            } else {
-                html.classList.remove('light');
-                html.classList.add('dark');
-                document.getElementById('theme-sun').classList.remove('hidden');
-                document.getElementById('theme-moon').classList.add('hidden');
-            }
+            const isDark = html.classList.toggle('dark');
+            document.getElementById('theme-sun').classList.toggle('hidden', !isDark);
+            document.getElementById('theme-moon').classList.toggle('hidden', isDark);
         }
 
         function toggleSound() {
-            soundMuted = !soundMuted;
-            document.getElementById('sound-icon-on').classList.toggle('hidden', soundMuted);
-            document.getElementById('sound-icon-off').classList.toggle('hidden', !soundMuted);
+            soundEnabled = !soundEnabled;
+            document.getElementById('sound-icon-on').classList.toggle('hidden', !soundEnabled);
+            document.getElementById('sound-icon-off').classList.toggle('hidden', soundEnabled);
         }
 
-        window.onload = function() {
-            // Ensure Light Mode by default
-            document.documentElement.classList.remove('dark');
-            document.documentElement.classList.add('light');
-            document.getElementById('theme-sun').classList.add('hidden');
-            document.getElementById('theme-moon').classList.remove('hidden');
-            resetToHome();
+        function setLength(val) {
+            seqLength = val;
+            document.querySelectorAll('[id^="len-"]').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`len-${val}`).classList.add('active');
+            document.getElementById('length-badge').textContent = `${val} Digits`;
+            updateHeroFontSize();
+            updateSampleSequence();
         }
 
-        function setDigits(n) {
-            if (gameState !== "IDLE") return;
-            config.digits = n;
-            ['d7', 'd8', 'd9', 'd10'].forEach(id => {
-                const el = document.getElementById(id);
-                if (el) el.classList.remove('active');
-            });
-            document.getElementById('d' + n).classList.add('active');
+        function setExposure(val) {
+            exposureTime = val;
+            document.querySelectorAll('[id^="exp-"]').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`exp-${val}`).classList.add('active');
+            document.getElementById('exposure-badge').textContent = `${val}.0s`;
         }
 
-        function setTime(s) {
-            if (gameState !== "IDLE") return;
-            config.time = s;
-            ['t8', 't10', 't12'].forEach(id => {
-                const el = document.getElementById(id);
-                if (el) el.classList.remove('active');
-            });
-            document.getElementById('t' + s).classList.add('active');
-        }
-
-        function handlePrimaryAction() {
-            if (gameState === "IDLE") {
-                startChallenge();
-            } else if (gameState === "INPUT") {
-                checkAnswer();
-            } else if (gameState === "RESULT") {
-                nextRound();
+        function updateSampleSequence() {
+            let sample = "";
+            for (let i = 0; i < seqLength; i++) {
+                sample += Math.floor(Math.random() * 10);
             }
+            document.getElementById('digit-display').textContent = sample;
         }
 
-        function setConfigInteractive(enabled) {
-            const panel = document.getElementById('config-panel');
-            if (enabled) {
-                panel.classList.remove('opacity-40', 'pointer-events-none');
-            } else {
-                panel.classList.add('opacity-40', 'pointer-events-none');
+        function generateSequence() {
+            let seq = "";
+            for (let i = 0; i < seqLength; i++) {
+                seq += Math.floor(Math.random() * 10);
             }
+            return seq;
         }
 
         function startChallenge() {
-            stats.correct = 0;
-            stats.wrong = 0;
-            stats.currentRound = 0;
-            setConfigInteractive(false);
-            updateHUD();
-            nextRound();
+            getAudioContext();
+            document.getElementById('config-bar').classList.add('hidden');
+            document.getElementById('start-btn-container').classList.add('hidden');
+            document.getElementById('input-container').classList.add('hidden');
+            document.getElementById('feedback-container').classList.add('hidden');
+
+            runExposurePhase();
         }
 
-        function updateHUD() {
-            document.getElementById('score-correct').innerText = stats.correct;
-            document.getElementById('score-wrong').innerText = stats.wrong;
-            document.getElementById('round-indicator').innerText = `ROUND: ${Math.min(stats.currentRound + 1, TOTAL_ROUNDS)} / ${TOTAL_ROUNDS}`;
-        }
+        function runExposurePhase() {
+            currentSequence = generateSequence();
+            document.getElementById('digit-display').textContent = currentSequence;
+            updateHeroFontSize();
 
-        function generateUniqueSequence(len) {
-            const pool = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-            let result = "";
-            for (let i = 0; i < len; i++) {
-                if (pool.length === 0) {
-                    [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].forEach(n => pool.push(n));
-                }
-                const randomIndex = Math.floor(Math.random() * pool.length);
-                result += pool.splice(randomIndex, 1)[0];
-            }
-            return result;
-        }
+            const timerCircle = document.getElementById('timer-progress');
+            const totalDash = 276.46;
+            timerCircle.style.strokeDashoffset = '0';
 
-        function nextRound() {
-            stats.currentRound++;
-            if (stats.currentRound > TOTAL_ROUNDS) {
-                showSummary();
-                return;
-            }
-            gameState = "MEMORIZE";
-            updateHUD();
-            
-            document.getElementById('input-block').classList.add('hidden');
-            document.getElementById('result-block').classList.add('hidden');
-            
-            const btn = document.getElementById('primary-action-btn');
-            btn.innerText = "MEMORIZING...";
-            btn.classList.add('pointer-events-none', 'opacity-60');
+            const startTime = Date.now();
+            const durationMs = exposureTime * 1000;
 
-            currentNumber = generateUniqueSequence(config.digits);
-            
-            const displayEl = document.getElementById('number-display');
-            displayEl.innerText = currentNumber;
-            if (config.digits >= 10) {
-                displayEl.style.fontSize = '3.5rem';
-                displayEl.style.letterSpacing = '0.01rem';
-            } else if (config.digits >= 9) {
-                displayEl.style.fontSize = '3.9rem';
-                displayEl.style.letterSpacing = '0.03rem';
-            } else if (config.digits >= 8) {
-                displayEl.style.fontSize = '4.4rem';
-                displayEl.style.letterSpacing = '0.05rem';
-            } else {
-                displayEl.style.fontSize = '5.0rem';
-                displayEl.style.letterSpacing = '0.08rem';
-            }
+            if (timerInterval) clearInterval(timerInterval);
 
-            let start = Date.now();
-            let limit = config.time * 1000;
-            
-            clearInterval(timer);
-            timer = setInterval(() => {
-                let diff = Date.now() - start;
-                let rem = Math.max(0, limit - diff);
+            timerInterval = setInterval(() => {
+                const elapsed = Date.now() - startTime;
+                const remaining = Math.max(0, durationMs - elapsed);
+                const fraction = remaining / durationMs;
                 
-                let strokeOffset = 534 * (1 - (rem / limit));
-                document.getElementById('countdown-circle').setAttribute('stroke-dashoffset', strokeOffset);
-                document.getElementById('timer-status').innerHTML = `<span class="text-indigo-600 dark:text-indigo-400 font-bold text-sm">${Math.ceil(rem / 1000)}s</span> remaining`;
-                
-                if (rem <= 0) {
-                    clearInterval(timer);
-                    showInput();
+                timerCircle.style.strokeDashoffset = (totalDash * (1 - fraction)).toString();
+
+                if (remaining <= 0) {
+                    clearInterval(timerInterval);
+                    startRecallPhase();
                 }
             }, 30);
         }
 
-        function showInput() {
-            gameState = "INPUT";
+        function startRecallPhase() {
+            playSound('tick');
+            document.getElementById('digit-display').textContent = "•••••••";
+            document.getElementById('input-container').classList.remove('hidden');
+            document.getElementById('input-container').classList.add('flex');
             
-            const displayEl = document.getElementById('number-display');
-            displayEl.innerText = "• • • •";
-            displayEl.style.fontSize = '4.4rem';
-            displayEl.style.letterSpacing = '0.15rem';
-            
-            document.getElementById('timer-status').innerText = "Enter the sequence below";
-            document.getElementById('input-block').classList.remove('hidden');
-            
-            const btn = document.getElementById('primary-action-btn');
-            btn.innerText = "SUBMIT RESPONSE";
-            btn.classList.remove('pointer-events-none', 'opacity-60');
-
-            const inp = document.getElementById('user-input');
-            inp.value = "";
-            setTimeout(() => {
-                inp.focus();
-            }, 100);
-            inp.onkeyup = (e) => { if(e.key === 'Enter') checkAnswer(); };
+            const userInput = document.getElementById('user-input');
+            userInput.value = "";
+            userInput.placeholder = "•".repeat(seqLength);
+            userInput.focus();
         }
 
-        function checkAnswer() {
-            gameState = "RESULT";
-            const val = document.getElementById('user-input').value;
-            const status = document.getElementById('result-status');
-            const msg = document.getElementById('result-msg');
-            const btn = document.getElementById('primary-action-btn');
-            
-            document.getElementById('input-block').classList.add('hidden');
-            document.getElementById('result-block').classList.remove('hidden');
-            
-            if (val === currentNumber) {
-                stats.correct++;
-                status.innerText = "✓ Correct Answer";
-                status.className = "text-emerald-600 dark:text-emerald-500 text-sm font-extrabold uppercase mb-1";
-                msg.innerHTML = `Matched <span class="text-indigo-600 dark:text-indigo-400 font-extrabold tracking-widest">${currentNumber}</span>!`;
+        function submitAnswer() {
+            const userInput = document.getElementById('user-input').value.trim();
+            const isCorrect = (userInput === currentSequence);
+
+            if (isCorrect) {
+                correctCount++;
+                playSound('correct');
             } else {
-                stats.wrong++;
-                status.innerText = "✕ Misremembered";
-                status.className = "text-rose-600 dark:text-rose-500 text-sm font-extrabold uppercase mb-1";
-                msg.innerHTML = `Target sequence: <span class="text-slate-900 dark:text-white font-extrabold tracking-widest">${currentNumber}</span><br>You entered: <span class="text-rose-600 dark:text-rose-400 font-bold">${val || 'nothing'}</span>`;
+                wrongCount++;
+                playSound('wrong');
             }
 
-            if (stats.currentRound >= TOTAL_ROUNDS) {
-                btn.innerText = "VIEW EVALUATION";
-            } else {
-                btn.innerText = "NEXT ROUND";
-            }
+            document.getElementById('score-correct').textContent = correctCount;
+            document.getElementById('score-wrong').textContent = wrongCount;
+
+            sessionLogs.push({
+                round: currentRound,
+                target: currentSequence,
+                user: userInput || "(empty)",
+                correct: isCorrect
+            });
+
+            // Display feedback
+            document.getElementById('input-container').classList.add('hidden');
+            document.getElementById('input-container').classList.remove('flex');
             
-            updateHUD();
+            const badge = document.getElementById('feedback-badge');
+            if (isCorrect) {
+                badge.textContent = "CORRECT RECALL!";
+                badge.className = "px-4 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30";
+            } else {
+                badge.textContent = "INCORRECT!";
+                badge.className = "px-4 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-rose-500/20 text-rose-600 dark:text-rose-400 border border-rose-500/30";
+            }
+
+            document.getElementById('target-seq').textContent = currentSequence;
+            document.getElementById('your-seq').textContent = userInput || "None";
+            document.getElementById('feedback-container').classList.remove('hidden');
+            document.getElementById('feedback-container').classList.add('flex');
         }
 
-        function getDynamicEncouragement(correct) {
-            const messages = {
-                6: "Incredible hustle! You achieved complete memory lock and processed all sequences perfectly. Your neural pathways are operating at peak bandwidth!",
-                5: "Outstanding job! You matched almost every unique sequence under intense pressure. Just one minor parity error—keep it up!",
-                4: "Fabulous effort! You have solid intermediate short-term retention. Daily training will expand your sequence buffer even further.",
-                3: "Awesome fight! Your cognitive circuits are actively building stronger synapses with every session. Reset and go again!",
-                2: "Brilliant effort! Pushing your memory limits builds mental resilience. Every attempt—win or lose—grows your processing speed.",
-                1: "Fantastic try! Brain training is all about persistence. Don't worry about the score; focus on building the rhythm and try again!",
-                0: "Excellent attempt! You're actively sparking neuroplasticity just by attempting these fast-paced sequences. Your brain is getting stronger!"
-            };
-            return messages[correct] || messages[0];
-        }
-
-        async function fetchAIEvaluation() {
-            const loadingPanel = document.getElementById('ai-loading');
-            const contentPanel = document.getElementById('ai-content');
-            loadingPanel.classList.remove('hidden');
-            contentPanel.classList.add('hidden');
-
-            const query = `Analyze this memory challenge score: ${stats.correct} correct, ${stats.wrong} wrong out of 6 rounds. The setting was ${config.digits} digits per sequence, exposed for ${config.time} seconds. Create a playful custom memory "Brain Title" (e.g. "Quantum Megahertz" or "Goldfish Processing Core") and a short 2-sentence encouraging memory diagnosis. Formulate as JSON only containing keys 'title' and 'evaluation'.`;
-            
-            let attempts = 0;
-            const maxAttempts = 3;
-            let success = false;
-            let responseData = null;
-
-            while (attempts < maxAttempts && !success) {
-                try {
-                    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            contents: [{ parts: [{ text: query }] }],
-                            generationConfig: {
-                                responseMimeType: "application/json",
-                                responseSchema: {
-                                    type: "OBJECT",
-                                    properties: {
-                                        title: { type: "STRING" },
-                                        evaluation: { type: "STRING" }
-                                    },
-                                    required: ["title", "evaluation"]
-                                }
-                            }
-                        })
-                    });
-
-                    if (response.ok) {
-                        const json = await response.json();
-                        const text = json.candidates?.[0]?.content?.parts?.[0]?.text;
-                        if (text) {
-                            responseData = JSON.parse(text);
-                            success = true;
-                        }
-                    }
-                } catch (err) {
-                    // Fail silently
-                }
-
-                if (!success) {
-                    attempts++;
-                    if (attempts < maxAttempts) {
-                        await new Promise(resolve => setTimeout(resolve, Math.pow(2, attempts - 1) * 1000));
-                    }
-                }
-            }
-
-            loadingPanel.classList.add('hidden');
-            contentPanel.classList.remove('hidden');
-
-            if (success && responseData) {
-                aiBrainTitleEvaluated = responseData.title;
-                aiEvaluationEvaluated = responseData.evaluation;
+        function nextRound() {
+            if (currentRound >= maxRounds) {
+                showSummary();
             } else {
-                const scoreRatio = stats.correct / TOTAL_ROUNDS;
-                if (scoreRatio === 1) {
-                    aiBrainTitleEvaluated = "Hyper-threaded Superchip";
-                    aiEvaluationEvaluated = "Absolute flawless capacity. Your brain processed every sequence without a single bit leak.";
-                } else if (scoreRatio >= 0.6) {
-                    aiBrainTitleEvaluated = "SRAM Memory Bank";
-                    aiEvaluationEvaluated = "Highly reliable temporary buffer registers. Just minor noise in the signal path.";
-                } else {
-                    aiBrainTitleEvaluated = "Volatile Magnetic Tape";
-                    aiEvaluationEvaluated = "Decent attempts, but your registers encountered parity check errors. Keep practicing to speed up your synaptic cycle!";
-                }
+                currentRound++;
+                document.getElementById('round-indicator').textContent = `ROUND: ${currentRound} / ${maxRounds}`;
+                document.getElementById('feedback-container').classList.add('hidden');
+                document.getElementById('feedback-container').classList.remove('flex');
+                runExposurePhase();
             }
-
-            document.getElementById('ai-brain-title').innerText = aiBrainTitleEvaluated;
-            document.getElementById('ai-evaluation-text').innerText = aiEvaluationEvaluated;
         }
 
         function showSummary() {
             document.getElementById('game-workspace').classList.add('hidden');
-            document.getElementById('summary-screen').classList.remove('hidden');
-            document.getElementById('final-correct').innerText = stats.correct;
-            document.getElementById('final-wrong').innerText = stats.wrong;
-            
-            document.getElementById('encouragement-text').innerText = getDynamicEncouragement(stats.correct);
+            document.getElementById('summary-view').classList.remove('hidden');
+            document.getElementById('summary-view').classList.add('flex');
 
-            const now = new Date();
-            document.getElementById('summary-date').innerText = now.toLocaleDateString(undefined, { 
-                year: 'numeric', month: 'short', day: 'numeric' 
+            const totalDigits = correctCount * seqLength;
+            const accuracy = Math.round((correctCount / maxRounds) * 100);
+
+            document.getElementById('summary-accuracy').textContent = `${accuracy}%`;
+            document.getElementById('summary-digits').textContent = totalDigits;
+
+            const logsContainer = document.getElementById('session-logs');
+            logsContainer.innerHTML = "";
+            sessionLogs.forEach(log => {
+                const item = document.createElement('div');
+                item.className = "flex justify-between items-center py-1 border-b border-slate-200 dark:border-slate-700/50 last:border-0";
+                item.innerHTML = `
+                    <span class="font-bold">Round ${log.round}:</span>
+                    <span class="font-mono ${log.correct ? 'text-emerald-500' : 'text-rose-500'}">${log.user} / ${log.target}</span>
+                    <span>${log.correct ? '✅' : '❌'}</span>
+                `;
+                logsContainer.appendChild(item);
             });
-            fetchAIEvaluation();
-        }
-
-        function getShareText() {
-            const date = new Date().toLocaleDateString();
-            const brainPowerInfo = aiBrainTitleEvaluated ? `\n🧠 Diagnostic: ${aiBrainTitleEvaluated}` : '';
-            return `Digit Dash Challenge 🏆\nDate: ${date}\nDigits: ${config.digits} (Unique)\nTimer: ${config.time}s\nScore: ${stats.correct} Correct, ${stats.wrong} Wrong${brainPowerInfo}\nCan you beat my speed?`;
-        }
-
-        function shareWhatsApp() {
-            const text = encodeURIComponent(getShareText());
-            window.open(`whatsapp://send?text=${text}`, '_blank');
-        }
-
-        function copyResults() {
-            const text = getShareText();
-            const textArea = document.createElement("textarea");
-            textArea.value = text;
-            document.body.appendChild(textArea);
-            textArea.select();
-            try {
-                document.execCommand('copy');
-                const toast = document.getElementById('toast');
-                toast.classList.add('show');
-                setTimeout(() => toast.classList.remove('show'), 2000);
-            } catch (err) {
-                console.error('Failed to copy', err);
-            }
-            document.body.removeChild(textArea);
         }
 
         function resetToHome() {
-            clearInterval(timer);
-            gameState = "IDLE";
-            stats.correct = 0;
-            stats.wrong = 0;
-            stats.currentRound = 0;
-            updateHUD();
+            if (timerInterval) clearInterval(timerInterval);
+            currentRound = 1;
+            correctCount = 0;
+            wrongCount = 0;
+            sessionLogs = [];
+
+            document.getElementById('round-indicator').textContent = `ROUND: 1 / ${maxRounds}`;
+            document.getElementById('score-correct').textContent = "0";
+            document.getElementById('score-wrong').textContent = "0";
+
+            document.getElementById('summary-view').classList.add('hidden');
+            document.getElementById('summary-view').classList.remove('flex');
+            document.getElementById('feedback-container').classList.add('hidden');
+            document.getElementById('input-container').classList.add('hidden');
             
-            document.getElementById('summary-screen').classList.add('hidden');
             document.getElementById('game-workspace').classList.remove('hidden');
-            document.getElementById('input-block').classList.add('hidden');
-            document.getElementById('result-block').classList.add('hidden');
+            document.getElementById('game-workspace').classList.add('flex');
+            document.getElementById('config-bar').classList.remove('hidden');
+            document.getElementById('start-btn-container').classList.remove('hidden');
+
+            document.getElementById('timer-progress').style.strokeDashoffset = '0';
+            updateSampleSequence();
+        }
+
+        function shareResults() {
+            const accuracy = Math.round((correctCount / maxRounds) * 100);
+            const text = `🧠 Digit Dash Pro Diagnostic\nLength: ${seqLength} digits | Window: ${exposureTime}s\nAccuracy: ${accuracy}% (${correctCount}/${maxRounds})\nDigits Memorized: ${correctCount * seqLength}`;
             
-            setConfigInteractive(true);
-            
-            const displayEl = document.getElementById('number-display');
-            displayEl.innerText = "READY";
-            displayEl.style.fontSize = '5.2rem';
-            displayEl.style.letterSpacing = '0.12rem';
-            
-            document.getElementById('timer-status').innerText = "Press start to begin";
-            document.getElementById('countdown-circle').setAttribute('stroke-dashoffset', '0');
-            
-            const btn = document.getElementById('primary-action-btn');
-            btn.innerText = "START CHALLENGE";
-            btn.classList.remove('pointer-events-none', 'opacity-60');
+            try {
+                const tempInput = document.createElement("textarea");
+                tempInput.value = text;
+                document.body.appendChild(tempInput);
+                tempInput.select();
+                document.execCommand("copy");
+                document.body.removeChild(tempInput);
+
+                const toast = document.getElementById('copy-toast');
+                toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 2500);
+            } catch (err) {
+                console.log('Copy failed', err);
+            }
+        }
+
+        // Handle Enter key on number input
+        document.getElementById('user-input').addEventListener('keyup', function(e) {
+            if (e.key === 'Enter') {
+                submitAnswer();
+            }
+        });
+
+        // Initialize on load
+        window.onload = function() {
+            updateSampleSequence();
         }
     </script>
 </body>
